@@ -1,39 +1,7 @@
 # Assuming all mixamo characters share the same joints naming convention
 # Also assuming they all have the same joints
 from maya import cmds
-
-
-UP = (0, 1, 0)
-RED = 13
-
-HANDS = ["LeftHand", "RightHand"]
-FINGERS = ["Thumb", "Index", "Middle", "Ring", "Pinky"]
-NUM_FINGER_JOINTS = 4
-
-CTRL_NAMESPACE = "ctrl"
-
-
-def preprocess():
-    # select the hip joint
-    selected = cmds.ls(selection=True)
-    numElements = len(selected)
-    if not selected:
-        print("Please select a Hips joint to start with")
-        return
-    elif (numElements > 1):
-        print("Please select only one object")
-        return
-    else:
-        process(selected[0])
-
-
-def process(parentGrp: str):
-    # extract the namespace from input
-    if (":" not in parentGrp):
-        nameSpace = ""
-    else:
-        nameSpace = parentGrp.split(":", 1)[0]
-    fingers(parentGrp, nameSpace)
+from constants import *  # noqa: F403, F405
 
 
 def fingers(parentGrp: str, jntNameSpace: str):
@@ -91,6 +59,3 @@ def setCtrlHierarchy(rigNameSpace: str, hand: str, fngr: str, index: int):
     zeroGrp = f"{rigNameSpace}:zero{hand}{fngr}{str(index)}"
     parentCtrl = f"{rigNameSpace}:ctrl{hand}{fngr}{str(index-1)}"
     cmds.parent(zeroGrp, parentCtrl)
-
-
-preprocess()
