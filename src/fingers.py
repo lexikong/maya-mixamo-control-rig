@@ -33,6 +33,7 @@ def fingers(parentGrp: str, jntNameSpace: str):
 
 
 def createCircleCtrl(rigNameSpace: str, jntNameSpace: str, jntName: str):
+    # TODO: use the function from utils.py
     # create nurbs circle and zero group
     # TODO: non-hardcoded radius
     if ("Thumb1" in jntName):

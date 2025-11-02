@@ -1,5 +1,6 @@
 from maya import cmds
 import sys
+import importlib
 
 
 def importMayaScript():
@@ -30,10 +31,15 @@ def process(parentGrp: str):
         nameSpace = ""
     else:
         nameSpace = parentGrp.split(":", 1)[0]
-    fingers(parentGrp, nameSpace)
+    # fingers.fingers(parentGrp, nameSpace)
+    arms.armsCtrl(nameSpace)
 
 
 if __name__ == "__main__":
     importMayaScript()
-    from fingers import fingers
+    # import fingers
+    import arms
+    # importlib.reload(fingers)
+    importlib.reload(arms)
+
     preprocess()

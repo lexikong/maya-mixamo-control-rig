@@ -1,5 +1,6 @@
 UP = (0, 1, 0)
 RED = 13
+YELLOW = 17
 
 HANDS = ["LeftHand", "RightHand"]
 ARMS = ["LeftArm", "RightArm"]
