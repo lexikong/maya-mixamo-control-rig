@@ -23,7 +23,7 @@ def fingers(parentGrp: str, jntNameSpace: str):
 
         for fngr in FINGERS:
             for i in range(NUM_FINGER_JOINTS-1, 1, -1):
-                setCtrlHierarchy(CTRL_NAMESPACE, hand, fngr, i)
+                setFingerCtrlHierarchy(CTRL_NAMESPACE, hand, fngr, i)
             # Put the finger controls into one group
             topLvlFngr = f"{CTRL_NAMESPACE}:zero{hand}{fngr}1"
             cmds.parent(topLvlFngr, ctrlGrp)
@@ -56,7 +56,7 @@ def createCircleCtrl(rigNameSpace: str, jntNameSpace: str, jntName: str):
     cmds.parentConstraint(nurbsCircle, jntNameFull)
 
 
-def setCtrlHierarchy(rigNameSpace: str, hand: str, fngr: str, index: int):
+def setFingerCtrlHierarchy(rigNameSpace: str, hand: str, fngr: str, index: int):
     zeroGrp = f"{rigNameSpace}:zero{hand}{fngr}{str(index)}"
     parentCtrl = f"{rigNameSpace}:ctrl{hand}{fngr}{str(index-1)}"
     cmds.parent(zeroGrp, parentCtrl)

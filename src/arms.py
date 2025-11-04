@@ -22,7 +22,13 @@ def armsCtrl(jntNameSpace: str):
                              color=YELLOW,
                              constraint="orient")
             # TODO: should it be orient constraint?
-    # TODO: set hierarchy
+        # set hierarchy
+        for jnt, parentJnt in zip(jnts, jnts[1:]):
+            jntName = jnt.split(":")[-1]
+            parentJntName = parentJnt.split(":")[-1]
+            zeroGrp = f"{CTRL_NAMESPACE}:zero{jntName}"
+            parentCtrl = f"{CTRL_NAMESPACE}:ctrl{parentJntName}"
+            cmds.parent(zeroGrp, parentCtrl)
 
 
 def duplicateArmJoints(jntNameSpace: str, ctrlType: str):
