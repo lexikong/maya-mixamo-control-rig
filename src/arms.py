@@ -6,7 +6,7 @@ from utils import createCircleCtrl
 def armsCtrl(jntNameSpace: str):
     # duplicate arm joints for FK and IK
     duplicateArmJoints(jntNameSpace, "Fk")
-    duplicateArmJoints(jntNameSpace, "Ik")
+    # duplicateArmJoints(jntNameSpace, "Ik")
 
     # create controls for FK arms
     for arm in ARMS:
@@ -29,6 +29,7 @@ def armsCtrl(jntNameSpace: str):
             zeroGrp = f"{CTRL_NAMESPACE}:zero{jntName}"
             parentCtrl = f"{CTRL_NAMESPACE}:ctrl{parentJntName}"
             cmds.parent(zeroGrp, parentCtrl)
+        break  # FOR TESTING
 
 
 def duplicateArmJoints(jntNameSpace: str, ctrlType: str):

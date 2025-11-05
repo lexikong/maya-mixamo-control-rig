@@ -1,5 +1,6 @@
 from maya import cmds
-from constants import UP, RED
+from constants import RED
+from shapes import drawCtrlCircle
 
 
 def createCircleCtrl(rigNameSpace: str,
@@ -10,15 +11,9 @@ def createCircleCtrl(rigNameSpace: str,
                      constraint: str = "parent"):
     # create nurbs circle and zero group
     # TODO: non-hardcoded radius
-
-    nurbsCircle = cmds.circle(name=f"{rigNameSpace}:ctrl{jntName}",
-                              normal=UP,
-                              radius=radius)
-    # set color to be red
-    # TODO: allow user to customize color
-    shapeNode = cmds.listRelatives(nurbsCircle, shapes=True)[0]
-    cmds.setAttr(f"{shapeNode}.overrideEnabled", 1)
-    cmds.setAttr(f'{shapeNode}.overrideColor', color)
+    nurbsCircle = drawCtrlCircle(name=f"{rigNameSpace}:ctrl{jntName}",
+                                 radius=radius,
+                                 color=color)
     zeroGrp = cmds.group(nurbsCircle, name=f"{rigNameSpace}:zero{jntName}")
     # match transformation
     jntNameFull = f"{jntNameSpace}:{jntName}"
@@ -29,4 +24,3 @@ def createCircleCtrl(rigNameSpace: str,
         cmds.parentConstraint(nurbsCircle, jntNameFull)
     elif (constraint == "orient"):
         cmds.orientConstraint(nurbsCircle, jntNameFull)
-
