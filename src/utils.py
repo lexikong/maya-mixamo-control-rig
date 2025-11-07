@@ -1,8 +1,9 @@
 from maya import cmds
-from constants import RED
-from shapes import drawCtrlCircle
+from constants import RED, YELLOW
+from shapes import drawCtrlCircle, drawCtrlCube
 
 
+# TODO: move match transformation and constraint out?
 def createCircleCtrl(rigNameSpace: str,
                      jntNameSpace: str,
                      jntName: str,
@@ -24,3 +25,14 @@ def createCircleCtrl(rigNameSpace: str,
         cmds.parentConstraint(nurbsCircle, jntNameFull)
     elif (constraint == "orient"):
         cmds.orientConstraint(nurbsCircle, jntNameFull)
+
+
+def createCubeCtrl(ctrlNameSpace: str,
+                   jntName: str,
+                   size: float = 5.0,
+                   color: int = YELLOW):
+    cubeCtrl = drawCtrlCube(name=f"{ctrlNameSpace}:ctrl{jntName}",
+                            size=size,
+                            color=color)
+    zeroGrp = cmds.group(cubeCtrl, name=f"{ctrlNameSpace}:zero{jntName}")
+    return cubeCtrl, zeroGrp

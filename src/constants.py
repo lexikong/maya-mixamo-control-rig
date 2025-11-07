@@ -4,6 +4,8 @@ YELLOW = 17
 
 HANDS = ["LeftHand", "RightHand"]
 ARMS = ["LeftArm", "RightArm"]
+ELBOWS = ["LeftForeArm", "RightForeArm"]
+WRISTS = ["LeftHand", "RightHand"]
 FINGERS = ["Thumb", "Index", "Middle", "Ring", "Pinky"]
 NUM_FINGER_JOINTS = 4
 

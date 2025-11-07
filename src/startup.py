@@ -31,15 +31,32 @@ def process(parentGrp: str):
         nameSpace = ""
     else:
         nameSpace = parentGrp.split(":", 1)[0]
-    # fingers.fingers(parentGrp, nameSpace)
+    fingers.fingers(parentGrp, nameSpace)
+    orientJoints.orientJoints(nameSpace)
     arms.armsCtrl(nameSpace)
+
+
+def cleanup():
+    # remove all controls
+    ctrls = cmds.ls(f"{constants.CTRL_NAMESPACE}:*")
+    if ctrls:
+        cmds.delete(ctrls)
+    # remove arm FK and IK joints
+    arms.cleanup()
 
 
 if __name__ == "__main__":
     importMayaScript()
-    # import fingers
+    import fingers
     import arms
-    # importlib.reload(fingers)
+    import constants
+    import orientJoints
+    import utils
+    importlib.reload(fingers)
     importlib.reload(arms)
+    importlib.reload(constants)
+    importlib.reload(orientJoints)
+    importlib.reload(utils)
 
+    cleanup()
     preprocess()
