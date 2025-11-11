@@ -53,29 +53,48 @@ def duplicateArmJoints(jntNameSpace: str, ctrlType: str):
 
 def createArmIK(jntNameSpace: str):
     for arm in ARMS:
-        # Create IK handle
         armJntIk = f"{jntNameSpace}:{arm}Ik"
         elbowJntIk = f"{jntNameSpace}:{ELBOWS[ARMS.index(arm)]}Ik"
-        elbowJntIkShort = elbowJntIk.split(":")[-1]
         wristJntIk = f"{jntNameSpace}:{WRISTS[ARMS.index(arm)]}Ik"
-        wristJntIkShort = wristJntIk.split(":")[-1]
-        ikCtrl, zeroGrp = createCubeCtrl(CTRL_NAMESPACE, wristJntIkShort)
-        cmds.matchTransform(zeroGrp, wristJntIk)
-        ikHandle = cmds.ikHandle(name=f"{CTRL_NAMESPACE}:ikHandle{WRISTS[ARMS.index(arm)]}",
-                                 startJoint=armJntIk,
-                                 endEffector=wristJntIk,
-                                 solver="ikRPsolver")[0]
-        cmds.parent(ikHandle, ikCtrl)
-        cmds.hide(ikHandle)
+        wristName = WRISTS[ARMS.index(arm)]
+        elbowName = ELBOWS[ARMS.index(arm)]
+
+        # Create IK handle
+        ikHandle = createIkHandle(wristName, wristJntIk, armJntIk)
         # Create pole vector
-        poleVec, poleVecZeroGrp = createCubeCtrl(CTRL_NAMESPACE, f"{elbowJntIkShort}PoleVec")
-        cmds.matchTransform(poleVecZeroGrp, elbowJntIk)
-        cmds.parent(poleVecZeroGrp, wristJntIk)
-        # TODO: put the offset to constants
+        poleVec = createPoleVector(elbowName, wristJntIk, elbowJntIk, ikHandle)
+
+
+def createIkHandle(wristName: str, wristJntIk: str, armJntIk: str):
+    ikCtrl, zeroGrp = createCubeCtrl(CTRL_NAMESPACE, wristJntIk.split(":")[-1])
+    cmds.matchTransform(zeroGrp, wristJntIk)
+    ikHandle = cmds.ikHandle(name=f"{CTRL_NAMESPACE}:ikHandle{wristName}",
+                             startJoint=armJntIk,
+                             endEffector=wristJntIk,
+                             solver="ikRPsolver")[0]
+    cmds.parent(ikHandle, ikCtrl)
+    cmds.hide(ikHandle)
+    return ikHandle
+
+
+def createPoleVector(elbowName: str,
+                     wristJntIk: str,
+                     elbowJntIk: str,
+                     ikHandle: str):
+    poleVec, poleVecZeroGrp = createCubeCtrl(CTRL_NAMESPACE, f"{elbowName}PoleVec")
+    cmds.matchTransform(poleVecZeroGrp, elbowJntIk)
+    cmds.parent(poleVecZeroGrp, wristJntIk)
+    # TODO: put the offset to constants
+    # TODO: better way of handling left and right side
+    if (elbowName == "LeftForeArm"):
         cmds.setAttr(f"{poleVecZeroGrp}.translateX", 60.0)
-        cmds.parent(poleVecZeroGrp, world=True)
-        cmds.poleVectorConstraint(poleVec, ikHandle)
-        # TODO: left and right arm orient not symmetric...
+    else:
+        cmds.setAttr(f"{poleVecZeroGrp}.translateX", -60.0)
+    cmds.parent(poleVecZeroGrp, world=True)
+    cmds.poleVectorConstraint(poleVec, ikHandle)
+
+    # TODO: add annotations
+    return poleVec
 
 
 def cleanup():
