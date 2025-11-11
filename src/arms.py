@@ -63,6 +63,8 @@ def createArmIK(jntNameSpace: str):
         ikHandle = createIkHandle(wristName, wristJntIk, armJntIk)
         # Create pole vector
         poleVec = createPoleVector(elbowName, wristJntIk, elbowJntIk, ikHandle)
+        # Add annotation to pole vector
+        poleVectorAnnotation(poleVec, elbowJntIk, elbowName)
 
 
 def createIkHandle(wristName: str, wristJntIk: str, armJntIk: str):
@@ -96,9 +98,23 @@ def createPoleVector(elbowName: str,
         cmds.setAttr(f"{poleVecZeroGrp}.translateX", -60.0)
     cmds.parent(poleVecZeroGrp, world=True)
     cmds.poleVectorConstraint(poleVec, ikHandle)
-
-    # TODO: add annotations
     return poleVec
+
+
+def poleVectorAnnotation(poleVec: str, elbowJntIk: str, elbowName: str):
+    annotationShape = cmds.annotate(poleVec, tx="")
+    parentXform = cmds.listRelatives(annotationShape, parent=True)
+    # rename
+    nameSpace = poleVec.split(":")[0]
+    parentXform = cmds.rename(parentXform, f"{nameSpace}:annotation{elbowName}")
+    # match transform
+    cmds.matchTransform(parentXform, poleVec)
+    cmds.parent(parentXform, poleVec, shape=True)
+    cmds.pointConstraint(elbowJntIk, parentXform)
+    # set drawing mode as reference
+    annotationShape = cmds.listRelatives(parentXform, children=True)[0]
+    cmds.setAttr(f"{annotationShape}.overrideEnabled", 1)
+    cmds.setAttr(f"{annotationShape}.overrideDisplayType", 2)
 
 
 def cleanup():
