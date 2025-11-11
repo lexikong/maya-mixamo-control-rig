@@ -30,9 +30,11 @@ def createCircleCtrl(rigNameSpace: str,
 def createCubeCtrl(ctrlNameSpace: str,
                    jntName: str,
                    size: float = 5.0,
-                   color: int = YELLOW):
+                   color: int = YELLOW,
+                   poleVector: bool = False):
     cubeCtrl = drawCtrlCube(name=f"{ctrlNameSpace}:ctrl{jntName}",
                             size=size,
-                            color=color)
+                            color=color,
+                            poleVector=poleVector)
     zeroGrp = cmds.group(cubeCtrl, name=f"{ctrlNameSpace}:zero{jntName}")
     return cubeCtrl, zeroGrp

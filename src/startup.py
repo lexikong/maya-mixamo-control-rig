@@ -52,11 +52,13 @@ if __name__ == "__main__":
     import constants
     import orientJoints
     import utils
-    importlib.reload(fingers)
-    importlib.reload(arms)
+    import shapes
+    importlib.reload(shapes)
+    importlib.reload(utils)
     importlib.reload(constants)
     importlib.reload(orientJoints)
-    importlib.reload(utils)
+    importlib.reload(fingers)
+    importlib.reload(arms)
 
     cleanup()
     preprocess()

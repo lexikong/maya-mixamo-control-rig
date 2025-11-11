@@ -81,12 +81,16 @@ def createPoleVector(elbowName: str,
                      wristJntIk: str,
                      elbowJntIk: str,
                      ikHandle: str):
-    poleVec, poleVecZeroGrp = createCubeCtrl(CTRL_NAMESPACE, f"{elbowName}PoleVec")
+    poleVec, poleVecZeroGrp = createCubeCtrl(CTRL_NAMESPACE,
+                                             f"{elbowName}PoleVec",
+                                             poleVector=True)
     cmds.matchTransform(poleVecZeroGrp, elbowJntIk)
     cmds.parent(poleVecZeroGrp, wristJntIk)
     # TODO: put the offset to constants
     # TODO: better way of handling left and right side
     if (elbowName == "LeftForeArm"):
+        cmds.setAttr(f"{poleVec}.rotateY", 180.0)
+        cmds.makeIdentity(poleVec, apply=True, rotate=True)
         cmds.setAttr(f"{poleVecZeroGrp}.translateX", 60.0)
     else:
         cmds.setAttr(f"{poleVecZeroGrp}.translateX", -60.0)
