@@ -121,17 +121,20 @@ def poleVectorAnnotation(poleVec: str, elbowJntIk: str, elbowName: str):
 
 def createIkFkBlend(jntNameSpace: str):
     for arm in ARMS:
+        wrist = WRISTS[ARMS.index(arm)]
+        elbow = ELBOWS[ARMS.index(arm)]
+
         armJnt = f"{jntNameSpace}:{arm}"
-        elbowJnt = f"{jntNameSpace}:{ELBOWS[ARMS.index(arm)]}"
-        wristJnt = f"{jntNameSpace}:{WRISTS[ARMS.index(arm)]}"
+        elbowJnt = f"{jntNameSpace}:{elbow}"
+        wristJnt = f"{jntNameSpace}:{wrist}"
 
         armJntIk = f"{jntNameSpace}:{arm}Ik"
-        elbowJntIk = f"{jntNameSpace}:{ELBOWS[ARMS.index(arm)]}Ik"
-        wristJntIk = f"{jntNameSpace}:{WRISTS[ARMS.index(arm)]}Ik"
+        elbowJntIk = f"{jntNameSpace}:{elbow}Ik"
+        wristJntIk = f"{jntNameSpace}:{wrist}Ik"
 
         armJntFk = f"{jntNameSpace}:{arm}Fk"
-        elbowJntFk = f"{jntNameSpace}:{ELBOWS[ARMS.index(arm)]}Fk"
-        wristJntFk = f"{jntNameSpace}:{WRISTS[ARMS.index(arm)]}Fk"
+        elbowJntFk = f"{jntNameSpace}:{elbow}Fk"
+        wristJntFk = f"{jntNameSpace}:{wrist}Fk"
 
         # create orient constraints from IK and FK joints to the original joints
         armConstraint = cmds.orientConstraint(armJntIk, armJntFk, armJnt)[0]
@@ -190,6 +193,15 @@ def createIkFkBlend(jntNameSpace: str):
         cmds.connectAttr(f"{reverseNode}.outputX", f"{wristConstraint}.{wristIkAttr}")
         cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{wristConstraint}.{wristFkAttr}")
 
+        # connect to visibility of IK and FK ctrls
+        # TODO: make zero grp names not hardcoded
+        fkZeroGrp = f"{CTRL_NAMESPACE}:zero{arm}Fk"
+        ikZeroGrp = f"{CTRL_NAMESPACE}:zero{wrist}Ik"
+        pvZeroGrp = f"{CTRL_NAMESPACE}:zero{elbow}PoleVec"
+        cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{fkZeroGrp}.visibility")
+        cmds.connectAttr(f"{reverseNode}.outputX", f"{ikZeroGrp}.visibility")
+        cmds.connectAttr(f"{reverseNode}.outputX", f"{pvZeroGrp}.visibility")
+
 
 def cleanup():
     # remove all arm FK and IK joints
@@ -199,4 +211,7 @@ def cleanup():
     ikJoints = cmds.ls("*Ik", recursive=True)
     if ikJoints:
         cmds.delete(ikJoints)
+    reverseNodes = cmds.ls(type="reverse", recursive=True)
+    for node in reverseNodes:
+        cmds.delete(node)
     return
