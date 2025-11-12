@@ -1,6 +1,6 @@
 from maya import cmds
 from constants import RED, YELLOW
-from shapes import drawCtrlCircle, drawCtrlCube
+from shapes import drawCtrlCircle, drawCtrlCube, drawCtrlCross
 
 
 # TODO: move match transformation and constraint out?
@@ -38,3 +38,20 @@ def createCubeCtrl(ctrlNameSpace: str,
                             poleVector=poleVector)
     zeroGrp = cmds.group(cubeCtrl, name=f"{ctrlNameSpace}:zero{jntName}")
     return cubeCtrl, zeroGrp
+
+
+def createCrossCtrl(ctrlNameSpace: str,
+                    name: str,
+                    size: float = 5.0,
+                    color: int = RED,
+                    lineWidth: float = 2.0):
+    crossCtrl = drawCtrlCross(name=f"{ctrlNameSpace}:ctrl{name}",
+                              size=size,
+                              color=color,
+                              lineWidth=lineWidth)
+    shapeNode = cmds.listRelatives(crossCtrl, shapes=True)[0]
+    cmds.setAttr(f"{shapeNode}.overrideEnabled", 1)
+    cmds.setAttr(f'{shapeNode}.overrideColor', color)
+    cmds.setAttr(f"{shapeNode}.lineWidth", float(lineWidth))
+    zeroGrp = cmds.group(crossCtrl, name=f"{ctrlNameSpace}:zero{name}")
+    return crossCtrl, zeroGrp

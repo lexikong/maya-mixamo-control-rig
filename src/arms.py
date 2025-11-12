@@ -1,6 +1,6 @@
 from maya import cmds
 from constants import ARMS, ELBOWS, WRISTS, YELLOW, CTRL_NAMESPACE
-from utils import createCircleCtrl, createCubeCtrl
+from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl
 
 
 def armsCtrl(jntNameSpace: str):
@@ -29,9 +29,10 @@ def armsCtrl(jntNameSpace: str):
             zeroGrp = f"{CTRL_NAMESPACE}:zero{jntName}"
             parentCtrl = f"{CTRL_NAMESPACE}:ctrl{parentJntName}"
             cmds.parent(zeroGrp, parentCtrl)
-        break  # FOR TESTING
 
     createArmIK(jntNameSpace)
+
+    createIkFkBlend(jntNameSpace)
 
 
 def duplicateArmJoints(jntNameSpace: str, ctrlType: str):
@@ -112,9 +113,82 @@ def poleVectorAnnotation(poleVec: str, elbowJntIk: str, elbowName: str):
     cmds.parent(parentXform, poleVec, shape=True)
     cmds.pointConstraint(elbowJntIk, parentXform)
     # set drawing mode as reference
+    # TODO: put displayType number to constants
     annotationShape = cmds.listRelatives(parentXform, children=True)[0]
     cmds.setAttr(f"{annotationShape}.overrideEnabled", 1)
     cmds.setAttr(f"{annotationShape}.overrideDisplayType", 2)
+
+
+def createIkFkBlend(jntNameSpace: str):
+    for arm in ARMS:
+        armJnt = f"{jntNameSpace}:{arm}"
+        elbowJnt = f"{jntNameSpace}:{ELBOWS[ARMS.index(arm)]}"
+        wristJnt = f"{jntNameSpace}:{WRISTS[ARMS.index(arm)]}"
+
+        armJntIk = f"{jntNameSpace}:{arm}Ik"
+        elbowJntIk = f"{jntNameSpace}:{ELBOWS[ARMS.index(arm)]}Ik"
+        wristJntIk = f"{jntNameSpace}:{WRISTS[ARMS.index(arm)]}Ik"
+
+        armJntFk = f"{jntNameSpace}:{arm}Fk"
+        elbowJntFk = f"{jntNameSpace}:{ELBOWS[ARMS.index(arm)]}Fk"
+        wristJntFk = f"{jntNameSpace}:{WRISTS[ARMS.index(arm)]}Fk"
+
+        # create orient constraints from IK and FK joints to the original joints
+        armConstraint = cmds.orientConstraint(armJntIk, armJntFk, armJnt)[0]
+        cmds.setAttr(f"{armConstraint}.interpType", 2)
+        elbowConstraint = cmds.orientConstraint(
+            elbowJntIk, elbowJntFk, elbowJnt)[0]
+        cmds.setAttr(f"{elbowConstraint}.interpType", 2)
+        wristConstraint = cmds.orientConstraint(
+            wristJntIk, wristJntFk, wristJnt)[0]
+        cmds.setAttr(f"{wristConstraint}.interpType", 2)
+
+        # hide IK and FK joints
+        cmds.setAttr(f"{armJntIk}.visibility", 0)
+        cmds.setAttr(f"{elbowJntIk}.visibility", 0)
+        cmds.setAttr(f"{wristJntIk}.visibility", 0)
+        cmds.setAttr(f"{armJntFk}.visibility", 0)
+        cmds.setAttr(f"{elbowJntFk}.visibility", 0)
+        cmds.setAttr(f"{wristJntFk}.visibility", 0)
+
+        # create IKFK blend control shape
+        blendCtrl, blendZeroGrp = createCrossCtrl(CTRL_NAMESPACE,
+                                                  f"{arm}IkFkBlend",
+                                                  size=7.0,
+                                                  color=YELLOW)
+        # move the blend ctrl somewhere above the arm
+        cmds.matchTransform(blendZeroGrp, armJnt, pos=True, rot=False, scl=False)
+
+        currentY = cmds.getAttr(f"{blendZeroGrp}.translateY")
+        cmds.setAttr(f"{blendZeroGrp}.translateY", currentY+20.0)
+        # lock and hide attributes
+        attributesToHide = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'visibility']
+        for attr in attributesToHide:
+            fullAttrName = f'{blendCtrl}.{attr}'
+            cmds.setAttr(fullAttrName, lock=True)
+            cmds.setAttr(fullAttrName, keyable=False)
+
+        # create IKFK blend attribute
+        blendAttr = "IkFkBlend"
+        cmds.addAttr(blendCtrl, longName=blendAttr, minValue=0.0, maxValue=1.0, keyable=True)
+        cmds.setAttr(f"{blendCtrl}.{blendAttr}", 0)
+
+        # get the weight attribute names
+        armFkAttr = cmds.listAttr(armConstraint, string="*Fk*")[0]
+        armIkAttr = cmds.listAttr(armConstraint, string="*Ik*")[0]
+        elbowFkAttr = cmds.listAttr(elbowConstraint, string="*Fk*")[0]
+        elbowIkAttr = cmds.listAttr(elbowConstraint, string="*Ik*")[0]
+        wristFkAttr = cmds.listAttr(wristConstraint, string="*Fk*")[0]
+        wristIkAttr = cmds.listAttr(wristConstraint, string="*Ik*")[0]
+        # connect the blend attribute to the constraint weights
+        reverseNode = cmds.createNode('reverse', name=f"rvs{arm}IkFk")
+        cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{reverseNode}.inputX")
+        cmds.connectAttr(f"{reverseNode}.outputX", f"{armConstraint}.{armIkAttr}")
+        cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{armConstraint}.{armFkAttr}")
+        cmds.connectAttr(f"{reverseNode}.outputX", f"{elbowConstraint}.{elbowIkAttr}")
+        cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{elbowConstraint}.{elbowFkAttr}")
+        cmds.connectAttr(f"{reverseNode}.outputX", f"{wristConstraint}.{wristIkAttr}")
+        cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{wristConstraint}.{wristFkAttr}")
 
 
 def cleanup():
