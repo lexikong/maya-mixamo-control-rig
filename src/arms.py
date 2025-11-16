@@ -77,6 +77,9 @@ def createIkHandle(wristName: str, wristJntIk: str, armJntIk: str):
                              solver="ikRPsolver")[0]
     cmds.parent(ikHandle, ikCtrl)
     cmds.hide(ikHandle)
+
+    # set orient constraint from ikCtrl to wrist joint
+    cmds.orientConstraint(ikCtrl, wristJntIk)
     return ikHandle
 
 

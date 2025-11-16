@@ -31,9 +31,13 @@ def process(parentGrp: str):
         nameSpace = ""
     else:
         nameSpace = parentGrp.split(":", 1)[0]
-    fingers.fingers(parentGrp, nameSpace)
+    #fingers.fingers(parentGrp, nameSpace)
     orientJoints.orientJoints(nameSpace)
-    arms.armsCtrl(nameSpace)
+    #arms.armsCtrl(nameSpace)
+    mixamoLeftArm = limb.MixamoLimb(nameSpace, constants.CTRL_NAMESPACE, "LeftArm", "LeftForeArm", "LeftHand")
+    #mixamoLeftLeg = limb.MixamoLimb(nameSpace, constants.CTRL_NAMESPACE, "LeftUpLeg", "LeftLeg", "LeftFoot")
+    mixamoLeftArm.createCtrls()
+    mixamoLeftLeg.createCtrls()
 
 
 def cleanup():
@@ -53,12 +57,14 @@ if __name__ == "__main__":
     import orientJoints
     import utils
     import shapes
+    import limb
     importlib.reload(shapes)
     importlib.reload(utils)
     importlib.reload(constants)
     importlib.reload(orientJoints)
     importlib.reload(fingers)
     importlib.reload(arms)
+    importlib.reload(limb)
 
     cleanup()
     preprocess()
