@@ -34,8 +34,8 @@ def process(parentGrp: str):
     #fingers.fingers(parentGrp, nameSpace)
     orientJoints.orientJoints(nameSpace)
     #arms.armsCtrl(nameSpace)
-    mixamoLeftArm = limb.MixamoLimb(nameSpace, constants.CTRL_NAMESPACE, "LeftArm", "LeftForeArm", "LeftHand")
-    #mixamoLeftLeg = limb.MixamoLimb(nameSpace, constants.CTRL_NAMESPACE, "LeftUpLeg", "LeftLeg", "LeftFoot")
+    mixamoLeftArm = arm.MixamoArm(nameSpace, constants.CTRL_NAMESPACE, "LeftArm", "LeftForeArm", "LeftHand")
+    mixamoLeftLeg = leg.MixamoLeg(nameSpace, constants.CTRL_NAMESPACE, "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToe_End")
     mixamoLeftArm.createCtrls()
     mixamoLeftLeg.createCtrls()
 
@@ -52,19 +52,21 @@ def cleanup():
 if __name__ == "__main__":
     importMayaScript()
     import fingers
-    import arms
+    import arms_old as arms
     import constants
     import orientJoints
     import utils
     import shapes
-    import limb
+    import arm
+    import leg
     importlib.reload(shapes)
     importlib.reload(utils)
     importlib.reload(constants)
     importlib.reload(orientJoints)
     importlib.reload(fingers)
     importlib.reload(arms)
-    importlib.reload(limb)
+    importlib.reload(arm)
+    importlib.reload(leg)
 
     cleanup()
     preprocess()

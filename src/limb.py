@@ -1,9 +1,10 @@
 from maya import cmds
+from abc import ABC, abstractmethod
 from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl
 from constants import YELLOW
 
 
-class MixamoLimb:
+class MixamoLimb(ABC):
 
     def __init__(self,
                  jntNameSpace: str,
@@ -78,19 +79,19 @@ class MixamoLimb:
         self.poleVectorAnnotation(poleVec)
 
     def createIkHandle(self):
-        ikCtrl, zeroGrp = createCubeCtrl(self.ctrlNameSpace,
+        self.ikCtrl, zeroGrp = createCubeCtrl(self.ctrlNameSpace,
                                          self._thirdJntIkFull.split(":")[-1])
         cmds.matchTransform(zeroGrp, self._thirdJntIkFull)
         ikHandle = cmds.ikHandle(name=f"{self.ctrlNameSpace}:ikHandle{self.thirdJnt}",
                                  startJoint=self._firstJntIkFull,
                                  endEffector=self._thirdJntIkFull,
                                  solver="ikRPsolver")[0]
-        cmds.parent(ikHandle, ikCtrl)
+        cmds.parent(ikHandle, self.ikCtrl)
         cmds.hide(ikHandle)
 
         # set orient constraint from ikCtrl to wrist joint
         # TODO: only works for arms
-        cmds.orientConstraint(ikCtrl, self._thirdJntIkFull)
+        #cmds.orientConstraint(ikCtrl, self._thirdJntIkFull)
         return ikHandle
 
     def createPoleVector(self, ikHandle: str):
@@ -200,3 +201,7 @@ class MixamoLimb:
         cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{fkZeroGrp}.visibility")
         cmds.connectAttr(f"{reverseNode}.outputX", f"{ikZeroGrp}.visibility")
         cmds.connectAttr(f"{reverseNode}.outputX", f"{pvZeroGrp}.visibility")
+
+    @abstractmethod
+    def endJointOrient(self):
+        pass
