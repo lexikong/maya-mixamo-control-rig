@@ -161,21 +161,21 @@ class MixamoLeg(MixamoLimb):
         cmds.setAttr(f"{annotationShape}.overrideEnabled", 1)
         cmds.setAttr(f"{annotationShape}.overrideDisplayType", 2)
 
-    def createIkFkBlend2(self):
+    def createIkFkBlend(self):
         firstJntFull = f"{self.jntNameSpace}:{self.firstJnt}"
         sndJntFull = f"{self.jntNameSpace}:{self.secondJnt}"
         thirdJntFull = f"{self.jntNameSpace}:{self.thirdJnt}"
-        
+
         # create orient constraints from IK and FK joints to the original joints
         firstJntConstraint = cmds.orientConstraint(self._firstJntIkFull,
                                                    self._firstJntFkFull,
-                                                   firstJntFull, mo=True)[0]
+                                                   firstJntFull)[0]
         cmds.setAttr(f"{firstJntConstraint}.interpType", 2)
         sndJntConstraint = cmds.orientConstraint(
-            self._sndJntIkFull, self._sndJntFkFull, sndJntFull, mo=True)[0]
+            self._sndJntIkFull, self._sndJntFkFull, sndJntFull)[0]
         cmds.setAttr(f"{sndJntConstraint}.interpType", 2)
         thirdJntConstraint = cmds.orientConstraint(
-            self._thirdJntIkFull, self._thirdJntFkFull, thirdJntFull, mo=True)[0]
+            self._thirdJntIkFull, self._thirdJntFkFull, thirdJntFull)[0]
         cmds.setAttr(f"{thirdJntConstraint}.interpType", 2)
 
         # hide IK and FK joints
@@ -186,24 +186,22 @@ class MixamoLeg(MixamoLimb):
         cmds.setAttr(f"{self._sndJntFkFull}.visibility", 0)
         cmds.setAttr(f"{self._thirdJntFkFull}.visibility", 0)
 
-
         # create IKFK blend control shape
         blendCtrl, blendZeroGrp = createCrossCtrl(self.ctrlNameSpace,
                                                   f"{self.firstJnt}IkFkBlend",
                                                   size=7.0,
                                                   color=YELLOW)
+        # TODO: make it not hard-coded                                          
         # move the blend ctrl somewhere above the arm
-        cmds.matchTransform(blendZeroGrp, firstJntFull, pos=True, rot=False, scl=False)
-
-        currentY = cmds.getAttr(f"{blendZeroGrp}.translateY")
-        cmds.setAttr(f"{blendZeroGrp}.translateY", currentY+20.0)
+        cmds.matchTransform(blendZeroGrp, thirdJntFull, pos=True, rot=False, scl=False)
+        currentX = cmds.getAttr(f"{blendZeroGrp}.translateX")
+        cmds.setAttr(f"{blendZeroGrp}.translateX", currentX+20.0)
         # lock and hide attributes
         attributesToHide = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'visibility']
         for attr in attributesToHide:
             fullAttrName = f'{blendCtrl}.{attr}'
             cmds.setAttr(fullAttrName, lock=True)
             cmds.setAttr(fullAttrName, keyable=False)
-
 
         # create IKFK blend attribute
         blendAttr = "IkFkBlend"
@@ -217,7 +215,6 @@ class MixamoLeg(MixamoLimb):
         sndIkAttr = cmds.listAttr(sndJntConstraint, string="*Ik*")[0]
         thirdFkAttr = cmds.listAttr(thirdJntConstraint, string="*Fk*")[0]
         thirdIkAttr = cmds.listAttr(thirdJntConstraint, string="*Ik*")[0]
-
         # connect the blend attribute to the constraint weights
         reverseNode = cmds.createNode('reverse', name=f"rvs{self.firstJnt}IkFk")
         cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{reverseNode}.inputX")
@@ -227,7 +224,6 @@ class MixamoLeg(MixamoLimb):
         cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{sndJntConstraint}.{sndFkAttr}")
         cmds.connectAttr(f"{reverseNode}.outputX", f"{thirdJntConstraint}.{thirdIkAttr}")
         cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{thirdJntConstraint}.{thirdFkAttr}")
-
 
         # connect to visibility of IK and FK ctrls
         # TODO: make zero grp names not hardcoded

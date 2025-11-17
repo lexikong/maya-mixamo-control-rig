@@ -31,12 +31,12 @@ def process(parentGrp: str):
         nameSpace = ""
     else:
         nameSpace = parentGrp.split(":", 1)[0]
-    #fingers.fingers(parentGrp, nameSpace)
+    fingers.fingers(parentGrp, nameSpace)
     orientJoints.orientJoints(nameSpace)
     #arms.armsCtrl(nameSpace)
-    #mixamoLeftArm = arm.MixamoArm(nameSpace, constants.CTRL_NAMESPACE, "LeftArm", "LeftForeArm", "LeftHand")
+    mixamoLeftArm = arm.MixamoArm(nameSpace, constants.CTRL_NAMESPACE, "LeftArm", "LeftForeArm", "LeftHand")
     mixamoLeftLeg = leg.MixamoLeg(nameSpace, constants.CTRL_NAMESPACE, "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToe_End")
-    #mixamoLeftArm.createCtrls()
+    mixamoLeftArm.createCtrls()
     mixamoLeftLeg.createCtrls()
 
 
