@@ -99,7 +99,7 @@ class MixamoLimb(ABC):
                                                  f"{self.secondJnt}PoleVec",
                                                  poleVector=True)
         cmds.matchTransform(poleVecZeroGrp, self._sndJntIkFull)
-        cmds.parent(poleVecZeroGrp, self._thirdJntIkFull)
+        cmds.parent(poleVecZeroGrp, self._sndJntIkFull)
         # TODO: put the offset to constants
         # TODO: better way of handling left and right side
         if (self.secondJnt == "LeftForeArm"):

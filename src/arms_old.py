@@ -91,7 +91,7 @@ def createPoleVector(elbowName: str,
                                              f"{elbowName}PoleVec",
                                              poleVector=True)
     cmds.matchTransform(poleVecZeroGrp, elbowJntIk)
-    cmds.parent(poleVecZeroGrp, wristJntIk)
+    cmds.parent(poleVecZeroGrp, elbowJntIk)
     # TODO: put the offset to constants
     # TODO: better way of handling left and right side
     if (elbowName == "LeftForeArm"):
