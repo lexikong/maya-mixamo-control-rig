@@ -11,12 +11,15 @@ class MixamoLimb(ABC):
                  ctrlNameSpace: str,
                  firstJnt: str,
                  secondJnt: str,
-                 thirdJnt: str):
+                 thirdJnt: str,
+                 ikFkCtrlOffset: tuple):
         self.jntNameSpace = jntNameSpace
         self.ctrlNameSpace = ctrlNameSpace
         self.firstJnt = firstJnt
         self.secondJnt = secondJnt
         self.thirdJnt = thirdJnt
+        # the location of IKFK control shape offset from the first joint
+        self.ikFkCtrlOffset = ikFkCtrlOffset
 
     def createCtrls(self):
         # duplicate joints for FK and IK controls
@@ -159,11 +162,13 @@ class MixamoLimb(ABC):
                                                   f"{self.firstJnt}IkFkBlend",
                                                   size=7.0,
                                                   color=YELLOW)
-        # move the blend ctrl somewhere above the arm
+        
+        # put the blend control around the first joint plus offset
         cmds.matchTransform(blendZeroGrp, firstJntFull, pos=True, rot=False, scl=False)
 
-        currentY = cmds.getAttr(f"{blendZeroGrp}.translateY")
-        cmds.setAttr(f"{blendZeroGrp}.translateY", currentY+20.0)
+        currentTranslate = cmds.getAttr(f"{blendZeroGrp}.translate")[0]
+        newTranslate = [a + b for a, b in zip(currentTranslate, self.ikFkCtrlOffset)]
+        cmds.setAttr(f"{blendZeroGrp}.translate", newTranslate[0], newTranslate[1],newTranslate[2])
         # lock and hide attributes
         attributesToHide = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'visibility']
         for attr in attributesToHide:

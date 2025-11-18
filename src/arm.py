@@ -8,12 +8,14 @@ class MixamoArm(MixamoLimb):
                  ctrlNameSpace: str,
                  firstJnt: str,
                  secondJnt: str,
-                 thirdJnt: str):
+                 thirdJnt: str,
+                 ikFkCtrlOffset: tuple):
         super().__init__(jntNameSpace,
                          ctrlNameSpace,
                          firstJnt,
                          secondJnt,
-                         thirdJnt)
+                         thirdJnt,
+                         ikFkCtrlOffset)
 
     def createCtrls(self):
         super().createCtrls()

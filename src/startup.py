@@ -34,10 +34,15 @@ def process(parentGrp: str):
     #fingers.fingers(parentGrp, nameSpace)
     orientJoints.orientJoints(nameSpace)
     #arms.armsCtrl(nameSpace)
-    mixamoLeftArm = arm.MixamoArm(nameSpace, constants.CTRL_NAMESPACE, "LeftArm", "LeftForeArm", "LeftHand")
-    mixamoLeftLeg = leg.MixamoLeg(nameSpace, constants.CTRL_NAMESPACE, "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToe_End")
+    mixamoLeftArm = arm.MixamoArm(nameSpace, constants.CTRL_NAMESPACE, "LeftArm", "LeftForeArm", "LeftHand",constants.LEFT_ARM_IKFK_OFFSET)
+    mixamoRightArm = arm.MixamoArm(nameSpace, constants.CTRL_NAMESPACE, "RightArm", "RightForeArm", "RightHand",constants.RIGHT_ARM_IKFK_OFFSET)
+    mixamoLeftLeg = leg.MixamoLeg(nameSpace, constants.CTRL_NAMESPACE, "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToe_End",constants.LEFT_LEG_IKFK_OFFSET)
+    mixamoRightLeg = leg.MixamoLeg(nameSpace, constants.CTRL_NAMESPACE, "RightUpLeg", "RightLeg", "RightFoot", "RightToe_End",constants.RIGHT_LEG_IKFK_OFFSET)
     mixamoLeftArm.createCtrls()
     mixamoLeftLeg.createCtrls()
+    mixamoRightArm.createCtrls()
+    mixamoRightLeg.createCtrls()
+
 
 
 def cleanup():
@@ -59,14 +64,17 @@ if __name__ == "__main__":
     import shapes
     import arm
     import leg
+    import limb
     importlib.reload(shapes)
     importlib.reload(utils)
     importlib.reload(constants)
     importlib.reload(orientJoints)
     importlib.reload(fingers)
     importlib.reload(arms)
+    importlib.reload(limb)
     importlib.reload(arm)
     importlib.reload(leg)
+
 
     cleanup()
     preprocess()
