@@ -4,6 +4,7 @@ from maya import cmds
 from constants import *  # noqa: F403, F405
 
 
+# TODO: cartoon characters e.g. Doopy only has 4 fingers
 def fingers(parentGrp: str, jntNameSpace: str):
     # TODO: try mirroring to the other side instead of running all over again
     for hand in HANDS:

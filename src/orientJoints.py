@@ -17,7 +17,14 @@ def orientJoints(jntNameSpace: str):
     for leg in LEGS:
         knee = f"{jntNameSpace}:{KNEES[LEGS.index(leg)]}"
         ankle = f"{jntNameSpace}:{ANKLES[LEGS.index(leg)]}"
-        #cmds.setAttr(f"{knee}.jointOrientX", 0.0)
+        # make sure knee joint orient X is negative
+        # so that it won't flip on IK
+        # TODO: should I do the same for elbow?
+        kneeJointOrientX = cmds.getAttr(f"{knee}.jointOrientX")
+        if (kneeJointOrientX > 0):
+            cmds.setAttr(f"{knee}.jointOrientX", kneeJointOrientX * -1)
+        elif (kneeJointOrientX == 0):
+            cmds.setAttr(f"{knee}.jointOrientX", -0.05)
         cmds.setAttr(f"{knee}.jointOrientY", 0.0)
         cmds.setAttr(f"{knee}.jointOrientZ", 0.0)
         cmds.setAttr(f"{ankle}.jointOrientY", 0.0)
