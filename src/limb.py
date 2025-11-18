@@ -1,25 +1,23 @@
 from maya import cmds
-from abc import ABC, abstractmethod
 from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl
 from constants import YELLOW
+from limbParams import mixamoLimbParams
 
 
-class MixamoLimb(ABC):
+class MixamoLimb:
 
     def __init__(self,
                  jntNameSpace: str,
-                 ctrlNameSpace: str,
-                 firstJnt: str,
-                 secondJnt: str,
-                 thirdJnt: str,
-                 ikFkCtrlOffset: tuple):
+                 limbConfig: mixamoLimbParams):
         self.jntNameSpace = jntNameSpace
-        self.ctrlNameSpace = ctrlNameSpace
-        self.firstJnt = firstJnt
-        self.secondJnt = secondJnt
-        self.thirdJnt = thirdJnt
+        self.ctrlNameSpace = limbConfig.ctrlNameSpace
+        self.firstJnt = limbConfig.firstJnt
+        self.secondJnt = limbConfig.secondJnt
+        self.thirdJnt = limbConfig.thirdJnt
+        self.pvRotateY = limbConfig.pvRotateY
+        self.pvOffset = limbConfig.pvOffset
         # the location of IKFK control shape offset from the first joint
-        self.ikFkCtrlOffset = ikFkCtrlOffset
+        self.ikFkCtrlOffset = limbConfig.ikFkCtrlOffset
 
     def createCtrls(self):
         # duplicate joints for FK and IK controls
@@ -34,6 +32,8 @@ class MixamoLimb(ABC):
         self.createIkCtrls()
         # create IKFK blend ctrl
         self.createIkFkBlend()
+
+        self.endJointOrient()
 
     def duplicateThreeJointChain(self, postFix: str):
         # duplicate a three-joint chain and rename with postFix
@@ -103,14 +103,14 @@ class MixamoLimb(ABC):
                                                  poleVector=True)
         cmds.matchTransform(poleVecZeroGrp, self._sndJntIkFull)
         cmds.parent(poleVecZeroGrp, self._sndJntIkFull)
-        # TODO: put the offset to constants
-        # TODO: better way of handling left and right side
-        if (self.secondJnt == "LeftForeArm"):
-            cmds.setAttr(f"{poleVec}.rotateY", 180.0)
-            cmds.makeIdentity(poleVec, apply=True, rotate=True)
-            cmds.setAttr(f"{poleVecZeroGrp}.translateX", 60.0)
-        else:
-            cmds.setAttr(f"{poleVecZeroGrp}.translateX", -60.0)
+
+        # set the pole vector location
+        cmds.setAttr(f"{poleVec}.rotateY", self.pvRotateY)
+        cmds.makeIdentity(poleVec, apply=True, rotate=True)
+        cmds.setAttr(f"{poleVecZeroGrp}.translate",
+                     self.pvOffset[0],
+                     self.pvOffset[1],
+                     self.pvOffset[2])
         cmds.parent(poleVecZeroGrp, world=True)
         cmds.poleVectorConstraint(poleVec, ikHandle)
         return poleVec
@@ -207,6 +207,5 @@ class MixamoLimb(ABC):
         cmds.connectAttr(f"{reverseNode}.outputX", f"{ikZeroGrp}.visibility")
         cmds.connectAttr(f"{reverseNode}.outputX", f"{pvZeroGrp}.visibility")
 
-    @abstractmethod
     def endJointOrient(self):
-        pass
+        cmds.orientConstraint(self.ikCtrl, self._thirdJntIkFull, mo=True)

@@ -33,16 +33,16 @@ def process(parentGrp: str):
         nameSpace = parentGrp.split(":", 1)[0]
     #fingers.fingers(parentGrp, nameSpace)
     orientJoints.orientJoints(nameSpace)
-    #arms.armsCtrl(nameSpace)
-    mixamoLeftArm = arm.MixamoArm(nameSpace, constants.CTRL_NAMESPACE, "LeftArm", "LeftForeArm", "LeftHand",constants.LEFT_ARM_IKFK_OFFSET)
-    mixamoRightArm = arm.MixamoArm(nameSpace, constants.CTRL_NAMESPACE, "RightArm", "RightForeArm", "RightHand",constants.RIGHT_ARM_IKFK_OFFSET)
-    mixamoLeftLeg = leg.MixamoLeg(nameSpace, constants.CTRL_NAMESPACE, "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToe_End",constants.LEFT_LEG_IKFK_OFFSET)
-    mixamoRightLeg = leg.MixamoLeg(nameSpace, constants.CTRL_NAMESPACE, "RightUpLeg", "RightLeg", "RightFoot", "RightToe_End",constants.RIGHT_LEG_IKFK_OFFSET)
-    mixamoLeftArm.createCtrls()
-    mixamoLeftLeg.createCtrls()
-    mixamoRightArm.createCtrls()
-    mixamoRightLeg.createCtrls()
 
+    leftArm = arm.MixamoArm(nameSpace, limbConfig.leftArmParams)
+    leftLeg = leg.MixamoLeg(nameSpace, limbConfig.leftLegParams)
+    rightArm = arm.MixamoArm(nameSpace, limbConfig.rightArmParams)
+    rightLeg = leg.MixamoLeg(nameSpace, limbConfig.rightLegParams)
+
+    leftArm.createCtrls()
+    leftLeg.createCtrls()
+    rightArm.createCtrls()
+    rightLeg.createCtrls()
 
 
 def cleanup():
@@ -65,6 +65,9 @@ if __name__ == "__main__":
     import arm
     import leg
     import limb
+    import limbParams
+    import limbConfig
+
     importlib.reload(shapes)
     importlib.reload(utils)
     importlib.reload(constants)
@@ -74,7 +77,8 @@ if __name__ == "__main__":
     importlib.reload(limb)
     importlib.reload(arm)
     importlib.reload(leg)
-
+    importlib.reload(limbParams)
+    importlib.reload(limbConfig)
 
     cleanup()
     preprocess()

@@ -1,0 +1,22 @@
+from dataclasses import dataclass
+
+
+@dataclass
+class mixamoLimbParams:
+    ctrlNameSpace: str
+    firstJnt: str
+    secondJnt: str
+    thirdJnt: str
+    pvRotateY: float
+    pvOffset: tuple
+    ikFkCtrlOffset: tuple
+
+
+@dataclass
+class mixamoArmParams(mixamoLimbParams):
+    pass
+
+
+@dataclass
+class mixamoLegParams(mixamoLimbParams):
+    toeJnt: str

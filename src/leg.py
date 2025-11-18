@@ -3,28 +3,16 @@ from maya import cmds
 from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl
 from constants import YELLOW
 from shapes import drawCtrlCube
+from limbParams import mixamoLegParams
 
 
 class MixamoLeg(MixamoLimb):
     def __init__(self,
                  jntNameSpace: str,
-                 ctrlNameSpace: str,
-                 firstctrlJnt: str,
-                 secondctrlJnt: str,
-                 thirdctrlJnt: str,
-                 toeJnt: str,
-                 ikFkCtrlOffset: tuple):
+                 legConfig: mixamoLegParams):
         super().__init__(jntNameSpace,
-                         ctrlNameSpace,
-                         firstctrlJnt,
-                         secondctrlJnt,
-                         thirdctrlJnt,
-                         ikFkCtrlOffset)
-        self.toeJnt = toeJnt
-
-    def createCtrls(self):
-        super().createCtrls()
-        self.endJointOrient()
+                         legConfig)
+        self.toeJnt = legConfig.toeJnt
 
     def createFkCtrls(self):
         jnts = cmds.listRelatives(self._firstJntFkFull, allDescendents=True)
@@ -126,39 +114,3 @@ class MixamoLeg(MixamoLimb):
         cmds.hide(ikHandle)
 
         return ikHandle
-    
-    def endJointOrient(self):
-        cmds.orientConstraint(self.ikCtrl, self._thirdJntIkFull, mo=True)
-
-    def createPoleVector(self, ikHandle: str):
-        poleVec, poleVecZeroGrp = createCubeCtrl(self.ctrlNameSpace,
-                                                 f"{self.secondJnt}PoleVec",
-                                                 poleVector=True)
-        cmds.matchTransform(poleVecZeroGrp, self._sndJntIkFull)
-        cmds.parent(poleVecZeroGrp, self._sndJntIkFull)
-        # TODO: put the offset to constants
-        # TODO: better way of handling left and right side
-        cmds.setAttr(f"{poleVec}.rotateY", 90.0)
-        cmds.makeIdentity(poleVec, apply=True, rotate=True)
-        cmds.setAttr(f"{poleVecZeroGrp}.translateZ", 60.0)
-        cmds.parent(poleVecZeroGrp, world=True)
-        cmds.poleVectorConstraint(poleVec, ikHandle)
-
-        return poleVec
-
-    def poleVectorAnnotation(self, poleVec: str):
-        annotationShape = cmds.annotate(poleVec, tx="")
-        parentXform = cmds.listRelatives(annotationShape, parent=True)
-        # rename
-        parentXform = cmds.rename(
-                    parentXform,
-                    f"{self.ctrlNameSpace}:annotation{self.secondJnt}")
-        # match transform
-        cmds.matchTransform(parentXform, poleVec)
-        cmds.parent(parentXform, poleVec, shape=True)
-        cmds.pointConstraint(self._sndJntIkFull, parentXform)
-        # set drawing mode as reference
-        # TODO: put displayType number to constants
-        annotationShape = cmds.listRelatives(parentXform, children=True)[0]
-        cmds.setAttr(f"{annotationShape}.overrideEnabled", 1)
-        cmds.setAttr(f"{annotationShape}.overrideDisplayType", 2)
