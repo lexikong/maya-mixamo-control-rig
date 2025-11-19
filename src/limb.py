@@ -1,10 +1,11 @@
 from maya import cmds
+from abc import ABC, abstractmethod
 from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl
 from constants import YELLOW
 from limbParams import mixamoLimbParams
 
 
-class MixamoLimb:
+class MixamoLimb(ABC):
 
     def __init__(self,
                  jntNameSpace: str,
@@ -82,19 +83,21 @@ class MixamoLimb:
         self.poleVectorAnnotation(poleVec)
 
     def createIkHandle(self):
-        self.ikCtrl, zeroGrp = createCubeCtrl(self.ctrlNameSpace,
-                                         self._thirdJntIkFull.split(":")[-1])
-        cmds.matchTransform(zeroGrp, self._thirdJntIkFull)
+        self.createIkCtrlObj()
+        ikHandle = self.setupIkHandle()
+        return ikHandle
+
+    @abstractmethod
+    def createIkCtrlObj(self):
+        pass
+
+    def setupIkHandle(self):
         ikHandle = cmds.ikHandle(name=f"{self.ctrlNameSpace}:ikHandle{self.thirdJnt}",
                                  startJoint=self._firstJntIkFull,
                                  endEffector=self._thirdJntIkFull,
                                  solver="ikRPsolver")[0]
         cmds.parent(ikHandle, self.ikCtrl)
         cmds.hide(ikHandle)
-
-        # set orient constraint from ikCtrl to wrist joint
-        # TODO: only works for arms
-        #cmds.orientConstraint(ikCtrl, self._thirdJntIkFull)
         return ikHandle
 
     def createPoleVector(self, ikHandle: str):

@@ -5,10 +5,11 @@ from constants import UP, RED
 # draw different control shapes
 def drawCtrlCircle(name: str,
                    radius: float,
+                   normal: tuple = UP,
                    color: int = RED,
                    lineWidth: float = 2.0):
     nurbsCircle = cmds.circle(name=name,
-                              normal=UP,
+                              normal=normal,
                               radius=radius)
     shapeNode = cmds.listRelatives(nurbsCircle, shapes=True)[0]
     cmds.setAttr(f"{shapeNode}.overrideEnabled", 1)

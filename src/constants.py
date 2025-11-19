@@ -1,4 +1,5 @@
 UP = (0, 1, 0)
+FRONT = (0, 0, 1)
 RED = 13
 YELLOW = 17
 

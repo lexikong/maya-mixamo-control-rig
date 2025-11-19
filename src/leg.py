@@ -1,8 +1,8 @@
 from limb import MixamoLimb
 from maya import cmds
 from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl
-from constants import YELLOW
-from shapes import drawCtrlCube
+from constants import YELLOW, FRONT
+from shapes import drawCtrlCube, drawCtrlCircle
 from limbParams import mixamoLegParams
 
 
@@ -41,31 +41,29 @@ class MixamoLeg(MixamoLimb):
         # using a joint as the controller
         # so that the rotation is around world Y and local X,Z
         ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{jntName}",p=[0,0,0])
-        ctrlCircle = cmds.circle(radius=10.0)
+        ctrlCircle = drawCtrlCircle(f"tmpCtrl{jntName}",
+                                    radius=10.0,
+                                    normal=FRONT,
+                                    color=YELLOW)
         cmds.makeIdentity(ctrlCircle, apply=True, r=True)
         self.setupAnkleCtrl(ctrlJnt, jntName, ctrlCircle)
 
         jntNameFull = f"{self.jntNameSpace}:{jntName}"
         cmds.orientConstraint(ctrlJnt, jntNameFull, mo=True)
 
-    def createIkHandle(self):
+    def createIkCtrlObj(self):
         ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik", p=[0,0,0])
         cubeCtrl = drawCtrlCube(name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}", size=5.0)
         cmds.makeIdentity(cubeCtrl, apply=True, r=True)
-        self.setupAnkleCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)
 
+        self.setupAnkleCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)
         self.ikCtrl = ctrlJnt
 
-        ikHandle = cmds.ikHandle(name=f"{self.ctrlNameSpace}:ikHandle{self.thirdJnt}",
-                                 startJoint=self._firstJntIkFull,
-                                 endEffector=self._thirdJntIkFull,
-                                 solver="ikRPsolver")[0]
-        cmds.parent(ikHandle, ctrlJnt)
-        cmds.hide(ikHandle)
-
-        return ikHandle
-
     def setupAnkleCtrl(self, ctrlJnt: str, jntName: str, ctrlObj: str):
+        # take in a single joint and a ctrl object
+        # and set up for ankle control
+        # so that it rotates around world Y and local X and Z 
+
         # attach ctrl shape to joint
         ctrlShape = cmds.listRelatives(ctrlObj, shapes=True)[0]
         cmds.parent(ctrlShape, ctrlJnt, add=True, shape=True)

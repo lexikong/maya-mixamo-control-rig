@@ -1,5 +1,7 @@
 from limb import MixamoLimb
 from limbParams import mixamoArmParams
+from maya import cmds
+from utils import createCubeCtrl
 
 
 class MixamoArm(MixamoLimb):
@@ -7,3 +9,8 @@ class MixamoArm(MixamoLimb):
                  jntNameSpace: str,
                  armConfig: mixamoArmParams):
         super().__init__(jntNameSpace, armConfig)
+
+    def createIkCtrlObj(self):
+        self.ikCtrl, zeroGrp = createCubeCtrl(self.ctrlNameSpace,
+                                              self._thirdJntIkFull.split(":")[-1])
+        cmds.matchTransform(zeroGrp, self._thirdJntIkFull)
