@@ -1,6 +1,6 @@
 from limb import MixamoLimb
 from maya import cmds
-from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl
+from utils import createCircleCtrl
 from constants import YELLOW, FRONT
 from shapes import drawCtrlCube, drawCtrlCircle
 from limbParams import mixamoLegParams
