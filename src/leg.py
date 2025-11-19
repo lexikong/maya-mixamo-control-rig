@@ -43,66 +43,16 @@ class MixamoLeg(MixamoLimb):
         ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{jntName}",p=[0,0,0])
         ctrlCircle = cmds.circle(radius=10.0)
         cmds.makeIdentity(ctrlCircle, apply=True, r=True)
-        circleShape = cmds.listRelatives(ctrlCircle, shapes=True)[0]
+        self.setupAnkleCtrl(ctrlJnt, jntName, ctrlCircle)
 
-        # set circle shape color and line width
-        cmds.setAttr(f"{circleShape}.overrideEnabled", 1)
-        cmds.setAttr(f'{circleShape}.overrideColor', YELLOW)
-        cmds.setAttr(f"{circleShape}.lineWidth", 2.0)
-
-        # attach circle shape to joint
-        cmds.parent(circleShape, ctrlJnt, add=True, shape=True)
-        # set the joint display to none
-        cmds.setAttr(f"{ctrlJnt}.drawStyle", 2)
-        cmds.delete(ctrlCircle)
-
-        loc = cmds.spaceLocator()[0]
-        grp = cmds.group([ctrlJnt, loc], name=f"{self.ctrlNameSpace}:zero{jntName}")
         jntNameFull = f"{self.jntNameSpace}:{jntName}"
-        cmds.matchTransform(grp, jntNameFull)
-
-        pos = cmds.xform(loc, q=True, ws=True, t=True)
-        newPos = (pos[0], pos[1] + 5, pos[2])
-        cmds.xform(loc, ws=True, t=newPos)
-
-        # set aim constraint so that the ctrl joint aligns with world Y
-        toeJntFull = f"{self.jntNameSpace}:{self.toeJnt}"
-        aimConst = cmds.aimConstraint(loc, ctrlJnt, aimVector=[0,0,1], upVector=[0,1,0], wut="object", wuo=toeJntFull)
-        cmds.delete(aimConst)
-        cmds.delete(loc)
-        # freeze transformation
-        cmds.makeIdentity(ctrlJnt, apply=True, r=True)
-
         cmds.orientConstraint(ctrlJnt, jntNameFull, mo=True)
 
     def createIkHandle(self):
         ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik", p=[0,0,0])
         cubeCtrl = drawCtrlCube(name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}", size=5.0)
         cmds.makeIdentity(cubeCtrl, apply=True, r=True)
-        cubeShape = cmds.listRelatives(cubeCtrl, shapes=True)[0]
-
-        # attach circle shape to joint
-        cmds.parent(cubeShape, ctrlJnt, add=True, shape=True)
-        # set the joint display to none
-        cmds.setAttr(f"{ctrlJnt}.drawStyle", 2)
-        cmds.delete(cubeCtrl)
-
-        loc = cmds.spaceLocator(p=[0,0,0])[0]
-        grp = cmds.group([ctrlJnt, loc], name=f"{self.ctrlNameSpace}:zero{self.thirdJnt}Ik")
-        jntNameFull = f"{self.jntNameSpace}:{self.thirdJnt}"
-        cmds.matchTransform(grp, jntNameFull)
-
-        pos = cmds.xform(loc, q=True, ws=True, t=True)
-        newPos = (pos[0], pos[1] + 5, pos[2])
-        cmds.xform(loc, ws=True, t=newPos)
-
-        # set aim constraint so that the ctrl joint aligns with world Y
-        toeJntFull = f"{self.jntNameSpace}:{self.toeJnt}"
-        aimConst = cmds.aimConstraint(loc, ctrlJnt, aimVector=[0,0,1], upVector=[0,1,0], wut="object", wuo=toeJntFull)
-        cmds.delete(aimConst)
-        cmds.delete(loc)
-        # freeze transformation
-        cmds.makeIdentity(ctrlJnt, apply=True, r=True)
+        self.setupAnkleCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)
 
         self.ikCtrl = ctrlJnt
 
@@ -114,3 +64,28 @@ class MixamoLeg(MixamoLimb):
         cmds.hide(ikHandle)
 
         return ikHandle
+
+    def setupAnkleCtrl(self, ctrlJnt: str, jntName: str, ctrlObj: str):
+        # attach ctrl shape to joint
+        ctrlShape = cmds.listRelatives(ctrlObj, shapes=True)[0]
+        cmds.parent(ctrlShape, ctrlJnt, add=True, shape=True)
+        # set the joint display to none
+        cmds.setAttr(f"{ctrlJnt}.drawStyle", 2)
+        cmds.delete(ctrlObj)
+
+        loc = cmds.spaceLocator()[0]
+        grp = cmds.group([ctrlJnt, loc], name=f"{self.ctrlNameSpace}:zero{jntName}")
+        jntNameFull = f"{self.jntNameSpace}:{jntName}"
+        cmds.matchTransform(grp, jntNameFull)
+        # move the locator up along world Y
+        pos = cmds.xform(loc, q=True, ws=True, t=True)
+        newPos = (pos[0], pos[1] + 5, pos[2])
+        cmds.xform(loc, ws=True, t=newPos)
+
+        # set aim constraint so that the ctrl joint aligns with world Y
+        toeJntFull = f"{self.jntNameSpace}:{self.toeJnt}"
+        aimConst = cmds.aimConstraint(loc, ctrlJnt, aimVector=[0,0,1], upVector=[0,1,0], wut="object", wuo=toeJntFull)
+        cmds.delete(aimConst)
+        cmds.delete(loc)
+        # freeze transformation
+        cmds.makeIdentity(ctrlJnt, apply=True, r=True)
