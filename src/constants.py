@@ -2,6 +2,8 @@ UP = (0, 1, 0)
 FRONT = (0, 0, 1)
 RED = 13
 YELLOW = 17
+PINK = 20
+VIOLET = 9
 
 HANDS = ["LeftHand", "RightHand"]
 ARMS = ["LeftArm", "RightArm"]
@@ -11,6 +13,8 @@ FINGERS = ["Thumb", "Index", "Middle", "Ring", "Pinky"]
 LEGS = ["LeftUpLeg", "RightUpLeg"]
 KNEES = ["LeftLeg", "RightLeg"]
 ANKLES = ["LeftFoot", "RightFoot"]
+SPINES = ["Spine2", "Spine1", "Spine"]
+HEAD = ["Head", "Neck"]
 NUM_FINGER_JOINTS = 4
 
 CTRL_NAMESPACE = "ctrl"

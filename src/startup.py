@@ -44,6 +44,9 @@ def process(parentGrp: str):
     rightArm.createCtrls()
     rightLeg.createCtrls()
 
+    spine.createSpineCtrls(nameSpace)
+    head.createHeadCtrls(nameSpace)
+
 
 def cleanup():
     # remove all controls
@@ -67,6 +70,8 @@ if __name__ == "__main__":
     import limb
     import limbParams
     import limbConfig
+    import spine
+    import head
 
     importlib.reload(shapes)
     importlib.reload(utils)
@@ -79,6 +84,8 @@ if __name__ == "__main__":
     importlib.reload(leg)
     importlib.reload(limbParams)
     importlib.reload(limbConfig)
+    importlib.reload(spine)
+    importlib.reload(head)
 
     cleanup()
     preprocess()

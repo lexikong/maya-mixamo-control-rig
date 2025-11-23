@@ -55,3 +55,30 @@ def createCrossCtrl(ctrlNameSpace: str,
     cmds.setAttr(f"{shapeNode}.lineWidth", float(lineWidth))
     zeroGrp = cmds.group(crossCtrl, name=f"{ctrlNameSpace}:zero{name}")
     return crossCtrl, zeroGrp
+
+
+def multiJntFkCtrl(jnts, jntNameSpace, ctrlNameSpace, radius=25, color=YELLOW):
+    # jnts: a list of joint names without namespace prefix
+    # the order is bottom up
+    # e.g. ["Spine2", "Spine1", "Spine"]
+    createFkCtrls(jnts, jntNameSpace, ctrlNameSpace, radius, color)
+    setFkCtrlHierarchy(jnts, jntNameSpace, ctrlNameSpace)
+
+
+def createFkCtrls(jnts, jntNameSpace, ctrlNameSpace, radius, color):
+    for jnt in jnts:
+        createCircleCtrl(ctrlNameSpace,
+                         jntNameSpace,
+                         jnt,
+                         radius=radius,
+                         color=color,
+                         constraint="orient")
+
+
+def setFkCtrlHierarchy(jnts, jntNameSpace, ctrlNameSpace):
+    for jnt, parentJnt in zip(jnts, jnts[1:]):
+        # jntName = jnt.split(":")[-1]
+        # parentJntName = parentJnt.split(":")[-1]
+        zeroGrp = f"{ctrlNameSpace}:zero{jnt}"
+        parentCtrl = f"{ctrlNameSpace}:ctrl{parentJnt}"
+        cmds.parent(zeroGrp, parentCtrl)
