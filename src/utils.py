@@ -25,6 +25,7 @@ def createCircleCtrl(rigNameSpace: str,
         cmds.parentConstraint(nurbsCircle, jntNameFull)
     elif (constraint == "orient"):
         cmds.orientConstraint(nurbsCircle, jntNameFull)
+    return nurbsCircle[0], zeroGrp
 
 
 def createCubeCtrl(ctrlNameSpace: str,

@@ -4,6 +4,7 @@ from utils import createCircleCtrl
 from constants import YELLOW, FRONT
 from shapes import drawCtrlCube, drawCtrlCircle
 from limbParams import mixamoLegParams
+from foot import MixamoFoot
 
 
 class MixamoLeg(MixamoLimb):
@@ -13,6 +14,12 @@ class MixamoLeg(MixamoLimb):
         super().__init__(jntNameSpace,
                          legConfig)
         self.toeJnt = legConfig.toeJnt
+        self.ballJnt = legConfig.ballJnt
+        self.foot = MixamoFoot(self.jntNameSpace,
+                               self.ctrlNameSpace,
+                               self.thirdJnt,
+                               self.ballJnt,
+                               self.toeJnt)
 
     def createFkCtrls(self):
         jnts = cmds.listRelatives(self._firstJntFkFull, allDescendents=True)
@@ -36,6 +43,10 @@ class MixamoLeg(MixamoLimb):
             parentCtrl = f"{self.ctrlNameSpace}:ctrl{parentJntName}"
             cmds.parent(zeroGrp, parentCtrl)
 
+        # create foot FK
+        # TODO: separate it
+        self.foot.createFootFk()
+
     def createAnkleFkCtrl(self, jntName: str):
         # create ankle FK control
         # using a joint as the controller
@@ -50,6 +61,11 @@ class MixamoLeg(MixamoLimb):
 
         jntNameFull = f"{self.jntNameSpace}:{jntName}"
         cmds.orientConstraint(ctrlJnt, jntNameFull, mo=True)
+
+    def createIkCtrls(self):
+        super().createIkCtrls()
+        self.foot.createHelperJnts()
+        self.foot.createIkCtrls()
 
     def createIkCtrlObj(self):
         ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik", p=[0,0,0])

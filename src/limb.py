@@ -56,6 +56,7 @@ class MixamoLimb(ABC):
         return dupFirstJnt, secondJnt, thirdJnt
 
     def createFkCtrls(self):
+        # TODO: use the new util function
         jnts = cmds.listRelatives(self._firstJntFkFull, allDescendents=True)
         jnts.append(self._firstJntFkFull)
         for jnt in jnts:

@@ -15,6 +15,9 @@ KNEES = ["LeftLeg", "RightLeg"]
 ANKLES = ["LeftFoot", "RightFoot"]
 SPINES = ["Spine2", "Spine1", "Spine"]
 HEAD = ["Head", "Neck"]
+BALL = "ToeBase"
+TOE = "Toe_End"
+
 NUM_FINGER_JOINTS = 4
 
 CTRL_NAMESPACE = "ctrl"

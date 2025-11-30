@@ -66,6 +66,7 @@ if __name__ == "__main__":
     import utils
     import shapes
     import arm
+    import foot
     import leg
     import limb
     import limbParams
@@ -81,6 +82,7 @@ if __name__ == "__main__":
     importlib.reload(arms)
     importlib.reload(limb)
     importlib.reload(arm)
+    importlib.reload(foot)
     importlib.reload(leg)
     importlib.reload(limbParams)
     importlib.reload(limbConfig)

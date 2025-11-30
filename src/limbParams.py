@@ -19,4 +19,5 @@ class mixamoArmParams(mixamoLimbParams):
 
 @dataclass
 class mixamoLegParams(mixamoLimbParams):
+    ballJnt: str
     toeJnt: str
