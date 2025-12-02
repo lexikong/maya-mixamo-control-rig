@@ -48,6 +48,7 @@ class MixamoFoot:
         self.createToeHeelPivots()
         self.createFootIkCtrl()
         self.setHeelToeHierarchy()
+        self.hideAndLockAttributes()
 
     def renameAnkleIkCtrl(self):
         ankleIkOld = f"{self.ctrlNameSpace}:ctrl{self.ankleJnt}Ik"
@@ -167,3 +168,19 @@ class MixamoFoot:
         ballJntTranslateX = ballJntTranslate[0]
         cmds.setAttr(f"{footZeroGrp}.translateX", ballJntTranslateX)
 
+    def hideAndLockAttributes(self):
+        # lock and hide attributes
+        attributesExceptRotate = ['tx', 'ty', 'tz', 'sx', 'sy', 'sz', 'visibility']
+        attributesExceptTranslate = ['rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'visibility']
+        # hide all attributes except rotation for ankle ctrl
+        ankleCtrl = f"{self.ctrlNameSpace}:ctrl{self.side}FootIk"
+        for attr in attributesExceptRotate:
+            fullAttrName = f'{ankleCtrl}.{attr}'
+            cmds.setAttr(fullAttrName, lock=True)
+            cmds.setAttr(fullAttrName, keyable=False)
+
+        # hide all attributes except translate for foot ctrl
+        for attr in attributesExceptTranslate:
+            fullAttrName = f'{self.footCtrl}.{attr}'
+            cmds.setAttr(fullAttrName, lock=True)
+            cmds.setAttr(fullAttrName, keyable=False)
