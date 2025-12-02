@@ -168,7 +168,7 @@ class MixamoLimb(ABC):
                                                   color=YELLOW)
         
         # put the blend control around the first joint plus offset
-        cmds.matchTransform(blendZeroGrp, firstJntFull, pos=True, rot=False, scl=False)
+        cmds.matchTransform(blendZeroGrp, sndJntFull, pos=True, rot=False, scl=False)
 
         currentTranslate = cmds.getAttr(f"{blendZeroGrp}.translate")[0]
         newTranslate = [a + b for a, b in zip(currentTranslate, self.ikFkCtrlOffset)]
