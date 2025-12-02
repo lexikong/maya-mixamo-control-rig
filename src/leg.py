@@ -67,11 +67,12 @@ class MixamoLeg(MixamoLimb):
     def createIkCtrls(self):
         super().createIkCtrls()
         self.foot.createFootIk()
+        self.ikCtrl = f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk"
 
     def createIkCtrlObj(self):
         ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik", p=[0,0,0])
         #ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk", p=[0,0,0])
-        cubeCtrl = drawCtrlCube(name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}", size=5.0)
+        cubeCtrl = drawCtrlCube(name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}", size=10.0)
         cmds.makeIdentity(cubeCtrl, apply=True, r=True)
 
         self.setupAnkleCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)

@@ -41,21 +41,32 @@ class MixamoFoot:
         cmds.parent(zeroGrpFk, ankleJntCtrl)
 
     def createFootIk(self):
-        #self.renameAnkleIkCtrl()
         self.createHelperJnts()
         self.createBallToeRoll()
         self.deleteHelperJnts()
         self.createToeHeelPivots()
+
         self.createFootIkCtrl()
+
         self.setHeelToeHierarchy()
         self.hideAndLockAttributes()
+
+        self.renameAnkleIkCtrl()
+        self.renameFootIkCtrl()
 
     def renameAnkleIkCtrl(self):
         ankleIkOld = f"{self.ctrlNameSpace}:ctrl{self.ankleJnt}Ik"
         ankleIkZeroOld = f"{self.ctrlNameSpace}:zero{self.ankleJnt}Ik"
         cmds.rename(ankleIkOld, f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk")
-        self.ankleIkZeroGrp = f"{self.ctrlNameSpace}:zero{self.side}AnkleIk"
-        cmds.rename(ankleIkZeroOld, self.ankleIkZeroGrp)
+        ankleIkZeroGrp = f"{self.ctrlNameSpace}:zero{self.side}AnkleIk"
+        cmds.rename(ankleIkZeroOld, ankleIkZeroGrp)
+
+    def renameFootIkCtrl(self):
+        footIkOld = f"{self.ctrlNameSpace}:ctrl{self.side}AllFootIk"
+        footIkZeroOld = f"{self.ctrlNameSpace}:zero{self.side}AllFootIk"
+        cmds.rename(footIkOld, f"{self.ctrlNameSpace}:ctrl{self.ankleJnt}Ik")
+        footZeroGrp = f"{self.ctrlNameSpace}:zero{self.ankleJnt}Ik"
+        cmds.rename(footIkZeroOld, footZeroGrp)
 
     def createHelperJnts(self):
         # create helper joints that will help with ctrl orientation
@@ -118,7 +129,7 @@ class MixamoFoot:
         cmds.orientConstraint(toeIkCtrl, f"{self.jntNameSpace}:{self.ballJnt}")
         #ankleIkZeroGrp = f"{self.ctrlNameSpace}:zero{self.side}AnkleIk"
         #cmds.parent(self.ankleIkZeroGrp, ballIkCtrl)
-        ankleZeroGrp = f"{self.ctrlNameSpace}:zero{self.side}FootIk"
+        ankleZeroGrp = f"{self.ctrlNameSpace}:zero{self.ankleJnt}Ik"
         cmds.parent(ankleZeroGrp, ballIkCtrl)
 
     def createToeHeelPivots(self):
@@ -146,7 +157,7 @@ class MixamoFoot:
         cmds.matchTransform(self.toeZeroGrp, f"{self.jntNameSpace}:{self.toeJnt}", position=True, rotation=False)
         cmds.setAttr(f"{self.toeZeroGrp}.translateY", 0.0)
         toe_z = cmds.getAttr(f"{self.toeZeroGrp}.translateZ")
-        cmds.setAttr(f"{self.toeZeroGrp}.translateZ", toe_z+3.0)
+        cmds.setAttr(f"{self.toeZeroGrp}.translateZ", toe_z+2.0)
 
     def setHeelToeHierarchy(self):
         cmds.parent(self.ballIkZeroGrp, self.heelPivot)
@@ -174,6 +185,7 @@ class MixamoFoot:
         attributesExceptTranslate = ['rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'visibility']
         # hide all attributes except rotation for ankle ctrl
         ankleCtrl = f"{self.ctrlNameSpace}:ctrl{self.side}FootIk"
+        #ankleCtrl = f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk"
         for attr in attributesExceptRotate:
             fullAttrName = f'{ankleCtrl}.{attr}'
             cmds.setAttr(fullAttrName, lock=True)

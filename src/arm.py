@@ -12,5 +12,6 @@ class MixamoArm(MixamoLimb):
 
     def createIkCtrlObj(self):
         self.ikCtrl, zeroGrp = createCubeCtrl(self.ctrlNameSpace,
-                                              self._thirdJntIkFull.split(":")[-1])
+                                              self._thirdJntIkFull.split(":")[-1],
+                                              size=10.0)
         cmds.matchTransform(zeroGrp, self._thirdJntIkFull)
