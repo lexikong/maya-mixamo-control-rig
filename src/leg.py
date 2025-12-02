@@ -15,11 +15,13 @@ class MixamoLeg(MixamoLimb):
                          legConfig)
         self.toeJnt = legConfig.toeJnt
         self.ballJnt = legConfig.ballJnt
+        self.side = legConfig.side
         self.foot = MixamoFoot(self.jntNameSpace,
                                self.ctrlNameSpace,
                                self.thirdJnt,
                                self.ballJnt,
-                               self.toeJnt)
+                               self.toeJnt,
+                               self.side)
 
     def createFkCtrls(self):
         jnts = cmds.listRelatives(self._firstJntFkFull, allDescendents=True)
@@ -64,11 +66,11 @@ class MixamoLeg(MixamoLimb):
 
     def createIkCtrls(self):
         super().createIkCtrls()
-        self.foot.createHelperJnts()
-        self.foot.createIkCtrls()
+        self.foot.createFootIk()
 
     def createIkCtrlObj(self):
         ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik", p=[0,0,0])
+        #ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk", p=[0,0,0])
         cubeCtrl = drawCtrlCube(name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}", size=5.0)
         cmds.makeIdentity(cubeCtrl, apply=True, r=True)
 
@@ -89,6 +91,7 @@ class MixamoLeg(MixamoLimb):
 
         loc = cmds.spaceLocator()[0]
         grp = cmds.group([ctrlJnt, loc], name=f"{self.ctrlNameSpace}:zero{jntName}")
+        #grp = cmds.group([ctrlJnt, loc], name=f"{self.ctrlNameSpace}:zero{self.side}AnkleIk")
         jntNameFull = f"{self.jntNameSpace}:{jntName}"
         cmds.matchTransform(grp, jntNameFull)
         # move the locator up along world Y
