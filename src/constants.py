@@ -14,7 +14,9 @@ LEGS = ["LeftUpLeg", "RightUpLeg"]
 KNEES = ["LeftLeg", "RightLeg"]
 ANKLES = ["LeftFoot", "RightFoot"]
 SPINES = ["Spine2", "Spine1", "Spine"]
-HEAD = ["Head", "Neck"]
+NECK = ["Neck"]
+HEAD = "Head"
+HEAD_END = "HeadTop_End"
 BALL = "ToeBase"
 TOE = "Toe_End"
 
