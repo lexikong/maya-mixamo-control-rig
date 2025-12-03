@@ -78,8 +78,6 @@ def createFkCtrls(jnts, jntNameSpace, ctrlNameSpace, radius, color):
 
 def setFkCtrlHierarchy(jnts, jntNameSpace, ctrlNameSpace):
     for jnt, parentJnt in zip(jnts, jnts[1:]):
-        # jntName = jnt.split(":")[-1]
-        # parentJntName = parentJnt.split(":")[-1]
         zeroGrp = f"{ctrlNameSpace}:zero{jnt}"
         parentCtrl = f"{ctrlNameSpace}:ctrl{parentJnt}"
         cmds.parent(zeroGrp, parentCtrl)

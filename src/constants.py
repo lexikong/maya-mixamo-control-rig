@@ -4,8 +4,11 @@ RED = 13
 YELLOW = 17
 PINK = 20
 VIOLET = 9
+ORANGE = 21
 
+HIP = "Hips"
 HANDS = ["LeftHand", "RightHand"]
+SHOULDERS = ["LeftShoulder", "RightShoulder"]
 ARMS = ["LeftArm", "RightArm"]
 ELBOWS = ["LeftForeArm", "RightForeArm"]
 WRISTS = ["LeftHand", "RightHand"]
