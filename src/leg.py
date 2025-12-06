@@ -67,12 +67,14 @@ class MixamoLeg(MixamoLimb):
     def createIkCtrls(self):
         super().createIkCtrls()
         self.foot.createFootIk()
-        self.ikCtrl = f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk"
 
     def createIkCtrlObj(self):
-        ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik", p=[0,0,0])
-        #ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk", p=[0,0,0])
-        cubeCtrl = drawCtrlCube(name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}", size=10.0)
+        ctrlJnt = cmds.joint(
+            name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik",
+            p=[0, 0, 0])
+        cubeCtrl = drawCtrlCube(
+            name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}",
+            size=10.0)
         cmds.makeIdentity(cubeCtrl, apply=True, r=True)
 
         self.setupAnkleCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)
@@ -81,7 +83,33 @@ class MixamoLeg(MixamoLimb):
     def setupAnkleCtrl(self, ctrlJnt: str, jntName: str, ctrlObj: str):
         # take in a single joint and a ctrl object
         # and set up for ankle control
-        # so that it rotates around world Y and local X and Z 
+        # so that it rotates around world Y and local X and Z
+
+        jntNameFull = f"{self.jntNameSpace}:{jntName}"
+        cmds.matchTransform(ctrlJnt, jntNameFull)
+        loc = cmds.duplicate(ctrlJnt)
+        # move the locator up along world Y
+        pos = cmds.xform(loc, q=True, ws=True, t=True)
+        newPos = (pos[0], pos[1] + 5, pos[2])
+        cmds.xform(loc, ws=True, t=newPos)
+
+        # set aim constraint so that the ctrl joint aligns with world Y
+        toeJntFull = f"{self.jntNameSpace}:{self.toeJnt}"
+        aimConst = cmds.aimConstraint(
+            loc,
+            ctrlJnt,
+            aimVector=[0, 0, 1],
+            upVector=[0, 1, 0],
+            wut="object",
+            wuo=toeJntFull)
+        cmds.delete(aimConst)
+        cmds.delete(loc)
+        # freeze transformation
+        cmds.makeIdentity(ctrlJnt, apply=True)
+
+        grp = cmds.group(empty=True, name=f"{self.ctrlNameSpace}:zero{jntName}")
+        cmds.matchTransform(grp, ctrlJnt, position=True)
+        cmds.parent(ctrlJnt, grp)
 
         # attach ctrl shape to joint
         ctrlShape = cmds.listRelatives(ctrlObj, shapes=True)[0]
@@ -90,20 +118,5 @@ class MixamoLeg(MixamoLimb):
         cmds.setAttr(f"{ctrlJnt}.drawStyle", 2)
         cmds.delete(ctrlObj)
 
-        loc = cmds.spaceLocator()[0]
-        grp = cmds.group([ctrlJnt, loc], name=f"{self.ctrlNameSpace}:zero{jntName}")
-        #grp = cmds.group([ctrlJnt, loc], name=f"{self.ctrlNameSpace}:zero{self.side}AnkleIk")
-        jntNameFull = f"{self.jntNameSpace}:{jntName}"
-        cmds.matchTransform(grp, jntNameFull)
-        # move the locator up along world Y
-        pos = cmds.xform(loc, q=True, ws=True, t=True)
-        newPos = (pos[0], pos[1] + 5, pos[2])
-        cmds.xform(loc, ws=True, t=newPos)
-
-        # set aim constraint so that the ctrl joint aligns with world Y
-        toeJntFull = f"{self.jntNameSpace}:{self.toeJnt}"
-        aimConst = cmds.aimConstraint(loc, ctrlJnt, aimVector=[0,0,1], upVector=[0,1,0], wut="object", wuo=toeJntFull)
-        cmds.delete(aimConst)
-        cmds.delete(loc)
-        # freeze transformation
-        cmds.makeIdentity(ctrlJnt, apply=True, r=True)
+    def endJointOrient(self):
+        pass

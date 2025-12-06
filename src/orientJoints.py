@@ -1,5 +1,5 @@
 from maya import cmds
-from constants import ARMS, ELBOWS, WRISTS, LEGS, KNEES, ANKLES
+from constants import ARMS, ELBOWS, WRISTS, LEGS, KNEES, ANKLES, BALL
 
 
 def orientJoints(jntNameSpace: str):
@@ -39,4 +39,10 @@ def orientJoints(jntNameSpace: str):
         cmds.setAttr(f"{ankle}.rotateX", 0.0)
         cmds.setAttr(f"{ankle}.rotateY", 0.0)
         cmds.setAttr(f"{ankle}.rotateZ", 0.0)
-
+    # ball joints
+    leftBallJnt = f"{jntNameSpace}:Left{BALL}"
+    cmds.setAttr(f"{leftBallJnt}.jointOrientY", 0.0)
+    cmds.setAttr(f"{leftBallJnt}.jointOrientZ", 0.0)
+    rightBallJnt = f"{jntNameSpace}:Right{BALL}"
+    cmds.setAttr(f"{rightBallJnt}.jointOrientY", 0.0)
+    cmds.setAttr(f"{rightBallJnt}.jointOrientZ", 0.0)

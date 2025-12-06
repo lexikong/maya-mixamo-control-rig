@@ -45,28 +45,7 @@ class MixamoFoot:
         self.createBallToeRoll()
         self.deleteHelperJnts()
         self.createToeHeelPivots()
-
-        self.createFootIkCtrl()
-
         self.setHeelToeHierarchy()
-        self.hideAndLockAttributes()
-
-        self.renameAnkleIkCtrl()
-        self.renameFootIkCtrl()
-
-    def renameAnkleIkCtrl(self):
-        ankleIkOld = f"{self.ctrlNameSpace}:ctrl{self.ankleJnt}Ik"
-        ankleIkZeroOld = f"{self.ctrlNameSpace}:zero{self.ankleJnt}Ik"
-        cmds.rename(ankleIkOld, f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk")
-        ankleIkZeroGrp = f"{self.ctrlNameSpace}:zero{self.side}AnkleIk"
-        cmds.rename(ankleIkZeroOld, ankleIkZeroGrp)
-
-    def renameFootIkCtrl(self):
-        footIkOld = f"{self.ctrlNameSpace}:ctrl{self.side}AllFootIk"
-        footIkZeroOld = f"{self.ctrlNameSpace}:zero{self.side}AllFootIk"
-        cmds.rename(footIkOld, f"{self.ctrlNameSpace}:ctrl{self.ankleJnt}Ik")
-        footZeroGrp = f"{self.ctrlNameSpace}:zero{self.ankleJnt}Ik"
-        cmds.rename(footIkZeroOld, footZeroGrp)
 
     def createHelperJnts(self):
         # create helper joints that will help with ctrl orientation
@@ -127,10 +106,11 @@ class MixamoFoot:
 
         # set orient constraints
         cmds.orientConstraint(toeIkCtrl, f"{self.jntNameSpace}:{self.ballJnt}")
-        #ankleIkZeroGrp = f"{self.ctrlNameSpace}:zero{self.side}AnkleIk"
-        #cmds.parent(self.ankleIkZeroGrp, ballIkCtrl)
-        ankleZeroGrp = f"{self.ctrlNameSpace}:zero{self.ankleJnt}Ik"
-        cmds.parent(ankleZeroGrp, ballIkCtrl)
+        cmds.orientConstraint(ballIkCtrl, f"{self.jntNameSpace}:{self.ankleJnt}Ik", mo=True)
+
+        # put leg ik under ball roll ctrl
+        legIk = f"{self.ctrlNameSpace}:ikHandle{self.ankleJnt}"
+        cmds.parent(legIk, ballIkCtrl)
 
     def createToeHeelPivots(self):
         # heel and toe position
@@ -163,21 +143,7 @@ class MixamoFoot:
         cmds.parent(self.ballIkZeroGrp, self.heelPivot)
         cmds.parent(self.toeIkZeroGrp, self.heelPivot)
         cmds.parent(self.heelZeroGrp, self.toePivot)
-        cmds.parent(self.toeZeroGrp, self.footCtrl)
-
-    def createFootIkCtrl(self):
-        # create and scale the control shape
-        self.footCtrl = drawCtrlCircle(name=f"{self.ctrlNameSpace}:ctrl{self.side}AllFootIk",
-                                       radius=1.0,
-                                       color=YELLOW)[0]
-        cmds.setAttr(f"{self.footCtrl}.scaleX", 12.5)
-        cmds.setAttr(f"{self.footCtrl}.scaleZ", 18)
-        cmds.makeIdentity(self.footCtrl, apply=True)
-        # create the zero group
-        footZeroGrp = cmds.group(self.footCtrl, name=f"{self.ctrlNameSpace}:zero{self.side}AllFootIk")
-        ballJntTranslate = cmds.xform(f"{self.jntNameSpace}:{self.ballJnt}", q=True, t=True, ws=True)
-        ballJntTranslateX = ballJntTranslate[0]
-        cmds.setAttr(f"{footZeroGrp}.translateX", ballJntTranslateX)
+        cmds.parent(self.toeZeroGrp, f"{self.ctrlNameSpace}:ctrl{self.ankleJnt}Ik")
 
     def hideAndLockAttributes(self):
         # lock and hide attributes
