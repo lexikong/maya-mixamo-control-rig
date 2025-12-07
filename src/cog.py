@@ -5,12 +5,15 @@ from constants import HIP, CTRL_NAMESPACE, ORANGE
 
 def createCogCtrl(jntNameSpace: str):
     # create control circle
-    cogCtrl = drawCtrlCircle(name=f"{CTRL_NAMESPACE}:ctrlCog",
+    cogCtrlGrp = drawCtrlCircle(name=f"{CTRL_NAMESPACE}:ctrlCog",
                              radius=50,
-                             color=ORANGE)[0]
+                             color=ORANGE)
+    cogCtrl = cogCtrlGrp[0]
+    cogCtrlShape = cogCtrlGrp[1]
 
     # change the shape to octagon
-    cmds.rebuildCurve(cogCtrl, d=1, s=8)
+    cmds.setAttr(f"{cogCtrlShape}.degree", 1)
+
     # delete history
     cmds.delete(cogCtrl, constructionHistory=True)
 
