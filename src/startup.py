@@ -45,11 +45,14 @@ def process(parentGrp: str):
     rightLeg.createCtrls()
 
     shoulders.createShoulderCtrls(nameSpace)
-
-    spine.createSpineCtrls(nameSpace)
     head.createHeadCtrls(nameSpace)
+    spine.createSpineCtrls(nameSpace)
 
     cog.createCogCtrl(nameSpace)
+
+    world.createWorldCtrl()
+
+    cmds.select(clear=True)
 
 
 def cleanup():
@@ -79,6 +82,7 @@ if __name__ == "__main__":
     import head
     import shoulders
     import cog
+    import world
 
     importlib.reload(shapes)
     importlib.reload(utils)
@@ -96,6 +100,7 @@ if __name__ == "__main__":
     importlib.reload(head)
     importlib.reload(shoulders)
     importlib.reload(cog)
+    importlib.reload(world)
 
     cleanup()
     preprocess()

@@ -1,8 +1,12 @@
 from maya import cmds
-from constants import ARMS, ELBOWS, WRISTS, LEGS, KNEES, ANKLES, BALL
+from constants import ARMS, ELBOWS, WRISTS, LEGS, KNEES, ANKLES, BALL, HIP
 
 
 def orientJoints(jntNameSpace: str):
+    # make sure the hip is at world center
+    cmds.setAttr(f"{jntNameSpace}:{HIP}.translateX", 0.0)
+    cmds.setAttr(f"{jntNameSpace}:{HIP}.translateZ", 0.0)
+
     for arm in ARMS:
         elbowJnt = f"{jntNameSpace}:{ELBOWS[ARMS.index(arm)]}"
         wristJnt = f"{jntNameSpace}:{WRISTS[ARMS.index(arm)]}"
@@ -46,3 +50,4 @@ def orientJoints(jntNameSpace: str):
     rightBallJnt = f"{jntNameSpace}:Right{BALL}"
     cmds.setAttr(f"{rightBallJnt}.jointOrientY", 0.0)
     cmds.setAttr(f"{rightBallJnt}.jointOrientZ", 0.0)
+
