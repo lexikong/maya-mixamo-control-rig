@@ -1,6 +1,6 @@
 from maya import cmds
 from shapes import drawCtrlCircle
-from constants import HIP, CTRL_NAMESPACE, ORANGE
+from constants import HIP, CTRL_NAMESPACE, ORANGE, WRISTS, LEGS
 
 
 def createCogCtrl(jntNameSpace: str):
@@ -23,5 +23,16 @@ def createCogCtrl(jntNameSpace: str):
     hipJnt = f"{jntNameSpace}:{HIP}"
     cmds.matchTransform(cogZeroGrp, hipJnt)
 
+    setCogHierarchy(cogCtrl)
 
-# TODO: set up control and hierarchy
+
+def setCogHierarchy(cogCtrl):
+    # put hips, handCtrlGrps, LegIkFkBlend under cog
+    hipZeroGrp = f"{CTRL_NAMESPACE}:zero{HIP}"
+    cmds.parent(hipZeroGrp, cogCtrl)
+    for hand in WRISTS:
+        handGrp = f"{CTRL_NAMESPACE}:{hand}CtrlGrp"
+        cmds.parent(handGrp, cogCtrl)
+    for leg in LEGS:
+        legIkFkBlendGrp = f"{CTRL_NAMESPACE}:zero{leg}IkFkBlend"
+        cmds.parent(legIkFkBlendGrp, cogCtrl)
