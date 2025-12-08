@@ -1,7 +1,7 @@
 from limb import MixamoLimb
 from limbParams import mixamoArmParams
 from maya import cmds
-from utils import createCubeCtrl, lockAndHideAttributes
+from utils import createCubeCtrl, multiJntFkCtrl, lockAndHideAttributes
 
 
 class MixamoArm(MixamoLimb):
@@ -9,6 +9,16 @@ class MixamoArm(MixamoLimb):
                  jntNameSpace: str,
                  armConfig: mixamoArmParams):
         super().__init__(jntNameSpace, armConfig)
+
+    def createFkCtrls(self):
+        jntsFull = cmds.listRelatives(self._firstJntFkFull, allDescendents=True)
+        jntsFull.append(self._firstJntFkFull)
+
+        # get the jnt names without namespace
+        jnts = []
+        for jnt in jntsFull:
+            jnts.append(jnt.split(":")[-1])
+        multiJntFkCtrl(jnts, self.jntNameSpace, self.ctrlNameSpace, radius=10)
 
     def createIkCtrlObj(self):
         self.ikCtrl, zeroGrp = createCubeCtrl(self.ctrlNameSpace,

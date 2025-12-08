@@ -1,5 +1,5 @@
 from maya import cmds
-from utils import createCircleCtrl
+from utils import createCircleCtrl, lockAndHideAttributes
 from constants import CTRL_NAMESPACE, SHOULDERS, ARMS, YELLOW
 
 
@@ -14,6 +14,7 @@ def createShoulderCtrls(jntNameSpace: str):
                                                  radius=10.0,
                                                  color=YELLOW,
                                                  constraint="orient")
+        lockAndHideAttributes(shoulderCtrl)
         # set hierarchy
         arm = ARMS[i]
         armZeroGrp = f"{CTRL_NAMESPACE}:zero{arm}Fk"

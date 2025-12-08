@@ -55,25 +55,9 @@ class MixamoLimb(ABC):
         cmds.delete(allOtherJnts)
         return dupFirstJnt, secondJnt, thirdJnt
 
+    @abstractmethod
     def createFkCtrls(self):
-        # TODO: use the new util function
-        jnts = cmds.listRelatives(self._firstJntFkFull, allDescendents=True)
-        jnts.append(self._firstJntFkFull)
-        for jnt in jnts:
-            jntName = jnt.split(":")[-1]
-            createCircleCtrl(self.ctrlNameSpace,
-                             self.jntNameSpace,
-                             jntName,
-                             radius=10.0,
-                             color=YELLOW,
-                             constraint="orient")
-        # set hierarchy
-        for jnt, parentJnt in zip(jnts, jnts[1:]):
-            jntName = jnt.split(":")[-1]
-            parentJntName = parentJnt.split(":")[-1]
-            zeroGrp = f"{self.ctrlNameSpace}:zero{jntName}"
-            parentCtrl = f"{self.ctrlNameSpace}:ctrl{parentJntName}"
-            cmds.parent(zeroGrp, parentCtrl)
+        pass
 
     def createIkCtrls(self):
         # Create IK handle
