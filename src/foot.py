@@ -1,5 +1,5 @@
 from maya import cmds
-from utils import multiJntFkCtrl, createCircleCtrl
+from utils import multiJntFkCtrl, createCircleCtrl, lockAndHideAttributes
 from constants import YELLOW
 from shapes import drawCtrlBox, drawCtrlCube, drawCtrlCircle
 # set up toetip position
@@ -25,11 +25,11 @@ class MixamoFoot:
 
     def createFootFk(self):
         ballCtrl, zeroGrp = createCircleCtrl(self.ctrlNameSpace,
-                            self.jntNameSpace,
-                            f"{self.ballJnt}",
-                            radius=10.0,
-                            color=YELLOW,
-                            constraint="orient")
+                                             self.jntNameSpace,
+                                             f"{self.ballJnt}",
+                                             radius=10.0,
+                                             color=YELLOW,
+                                             constraint="orient")
         # append "Fk" postfix to ctrl and zero grp
         ballCtrlFk = f"{ballCtrl}Fk"
         cmds.rename(ballCtrl, ballCtrlFk)
@@ -39,6 +39,8 @@ class MixamoFoot:
         ankleJntFk = f"{self.ankleJnt}Fk"
         ankleJntCtrl = f"{self.ctrlNameSpace}:ctrl{ankleJntFk}"
         cmds.parent(zeroGrpFk, ankleJntCtrl)
+        # lock and hide other attribtues
+        lockAndHideAttributes(ballCtrlFk)
 
     def createFootIk(self):
         self.createHelperJnts()
@@ -108,6 +110,10 @@ class MixamoFoot:
         cmds.orientConstraint(toeIkCtrl, f"{self.jntNameSpace}:{self.ballJnt}")
         cmds.orientConstraint(ballIkCtrl, f"{self.jntNameSpace}:{self.ankleJnt}Ik", mo=True)
 
+        # hide and lock attributes
+        lockAndHideAttributes(toeIkCtrl)
+        lockAndHideAttributes(ballIkCtrl)
+
         # put leg ik under ball roll ctrl
         legIk = f"{self.ctrlNameSpace}:ikHandle{self.ankleJnt}"
         cmds.parent(legIk, ballIkCtrl)
@@ -139,26 +145,12 @@ class MixamoFoot:
         toe_z = cmds.getAttr(f"{self.toeZeroGrp}.translateZ")
         cmds.setAttr(f"{self.toeZeroGrp}.translateZ", toe_z+2.0)
 
+        # hide and lock attributes
+        lockAndHideAttributes(self.heelPivot)
+        lockAndHideAttributes(self.toePivot)
+
     def setHeelToeHierarchy(self):
         cmds.parent(self.ballIkZeroGrp, self.heelPivot)
         cmds.parent(self.toeIkZeroGrp, self.heelPivot)
         cmds.parent(self.heelZeroGrp, self.toePivot)
         cmds.parent(self.toeZeroGrp, f"{self.ctrlNameSpace}:ctrl{self.ankleJnt}Ik")
-
-    def hideAndLockAttributes(self):
-        # lock and hide attributes
-        attributesExceptRotate = ['tx', 'ty', 'tz', 'sx', 'sy', 'sz', 'visibility']
-        attributesExceptTranslate = ['rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'visibility']
-        # hide all attributes except rotation for ankle ctrl
-        ankleCtrl = f"{self.ctrlNameSpace}:ctrl{self.side}FootIk"
-        #ankleCtrl = f"{self.ctrlNameSpace}:ctrl{self.side}AnkleIk"
-        for attr in attributesExceptRotate:
-            fullAttrName = f'{ankleCtrl}.{attr}'
-            cmds.setAttr(fullAttrName, lock=True)
-            cmds.setAttr(fullAttrName, keyable=False)
-
-        # hide all attributes except translate for foot ctrl
-        for attr in attributesExceptTranslate:
-            fullAttrName = f'{self.footCtrl}.{attr}'
-            cmds.setAttr(fullAttrName, lock=True)
-            cmds.setAttr(fullAttrName, keyable=False)

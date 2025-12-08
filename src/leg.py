@@ -1,6 +1,6 @@
 from limb import MixamoLimb
 from maya import cmds
-from utils import createCircleCtrl
+from utils import createCircleCtrl, lockAndHideAttributes
 from constants import YELLOW, FRONT
 from shapes import drawCtrlCube, drawCtrlCircle
 from limbParams import mixamoLegParams
@@ -31,12 +31,13 @@ class MixamoLeg(MixamoLimb):
             if (i == 0):
                 self.createAnkleFkCtrl(jntName)
             else:
-                createCircleCtrl(self.ctrlNameSpace,
-                                 self.jntNameSpace,
-                                 jntName,
-                                 radius=10.0,
-                                 color=YELLOW,
-                                 constraint="orient")
+                circleCtrl = createCircleCtrl(self.ctrlNameSpace,
+                                              self.jntNameSpace,
+                                              jntName,
+                                              radius=10.0,
+                                              color=YELLOW,
+                                              constraint="orient")[0]
+                # lockAndHideAttributes(circleCtrl)
         # set hierarchy
         for jnt, parentJnt in zip(jnts, jnts[1:]):
             jntName = jnt.split(":")[-1]
@@ -63,6 +64,7 @@ class MixamoLeg(MixamoLimb):
 
         jntNameFull = f"{self.jntNameSpace}:{jntName}"
         cmds.orientConstraint(ctrlJnt, jntNameFull, mo=True)
+        lockAndHideAttributes(ctrlJnt, others=["radius"])
 
     def createIkCtrls(self):
         super().createIkCtrls()
@@ -79,6 +81,7 @@ class MixamoLeg(MixamoLimb):
 
         self.setupAnkleCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)
         self.ikCtrl = ctrlJnt
+        lockAndHideAttributes(self.ikCtrl, translate=False, others=["radi"])
 
     def setupAnkleCtrl(self, ctrlJnt: str, jntName: str, ctrlObj: str):
         # take in a single joint and a ctrl object

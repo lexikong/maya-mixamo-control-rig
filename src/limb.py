@@ -1,6 +1,6 @@
 from maya import cmds
 from abc import ABC, abstractmethod
-from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl
+from utils import createCircleCtrl, createCubeCtrl, createCrossCtrl, lockAndHideAttributes
 from constants import YELLOW
 from limbParams import mixamoLimbParams
 
@@ -117,6 +117,7 @@ class MixamoLimb(ABC):
                      self.pvOffset[2])
         cmds.parent(poleVecZeroGrp, world=True)
         cmds.poleVectorConstraint(poleVec, ikHandle)
+        lockAndHideAttributes(poleVec, translate=False, rotation=True)
         return poleVec
 
     def poleVectorAnnotation(self, poleVec: str):
@@ -174,11 +175,7 @@ class MixamoLimb(ABC):
         newTranslate = [a + b for a, b in zip(currentTranslate, self.ikFkCtrlOffset)]
         cmds.setAttr(f"{blendZeroGrp}.translate", newTranslate[0], newTranslate[1],newTranslate[2])
         # lock and hide attributes
-        attributesToHide = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'visibility']
-        for attr in attributesToHide:
-            fullAttrName = f'{blendCtrl}.{attr}'
-            cmds.setAttr(fullAttrName, lock=True)
-            cmds.setAttr(fullAttrName, keyable=False)
+        lockAndHideAttributes(blendCtrl, rotation=True)
 
         # create IKFK blend attribute
         blendAttr = "IkFkBlend"
@@ -211,5 +208,6 @@ class MixamoLimb(ABC):
         cmds.connectAttr(f"{reverseNode}.outputX", f"{ikZeroGrp}.visibility")
         cmds.connectAttr(f"{reverseNode}.outputX", f"{pvZeroGrp}.visibility")
 
+    @abstractmethod
     def endJointOrient(self):
-        cmds.orientConstraint(self.ikCtrl, self._thirdJntIkFull, mo=True)
+        pass

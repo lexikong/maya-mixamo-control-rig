@@ -11,6 +11,9 @@ def fingers(parentGrp: str, jntNameSpace: str):
         for fngr in FINGERS:
             for i in range(1, NUM_FINGER_JOINTS):
                 fngrJntName = f"{hand}{fngr}{str(i)}"
+                # fngrJntNameFull = f"{jntNameSpace}:{fngrJntName}"
+                # if (not cmds.objExists(fngrJntNameFull)):
+                #     break
                 createCircleCtrl(CTRL_NAMESPACE, jntNameSpace, fngrJntName)
     # Set hierarchy to ctrls
     for hand in HANDS:
@@ -61,3 +64,9 @@ def setFingerCtrlHierarchy(rigNameSpace: str, hand: str, fngr: str, index: int):
     zeroGrp = f"{rigNameSpace}:zero{hand}{fngr}{str(index)}"
     parentCtrl = f"{rigNameSpace}:ctrl{hand}{fngr}{str(index-1)}"
     cmds.parent(zeroGrp, parentCtrl)
+
+
+def createFingerCtrls(jntNameSpace: str):
+    # TODO: use multiJntFkCtrl() instead
+    pass
+

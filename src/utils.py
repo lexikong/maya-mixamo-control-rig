@@ -52,7 +52,7 @@ def createCrossCtrl(ctrlNameSpace: str,
                               lineWidth=lineWidth)
     shapeNode = cmds.listRelatives(crossCtrl, shapes=True)[0]
     cmds.setAttr(f"{shapeNode}.overrideEnabled", 1)
-    cmds.setAttr(f'{shapeNode}.overrideColor', color)
+    cmds.setAttr(f"{shapeNode}.overrideColor", color)
     cmds.setAttr(f"{shapeNode}.lineWidth", float(lineWidth))
     zeroGrp = cmds.group(crossCtrl, name=f"{ctrlNameSpace}:zero{name}")
     return crossCtrl, zeroGrp
@@ -68,12 +68,16 @@ def multiJntFkCtrl(jnts, jntNameSpace, ctrlNameSpace, radius=25, color=YELLOW, c
 
 def createFkCtrls(jnts, jntNameSpace, ctrlNameSpace, radius, color, constraint: str = "orient"):
     for jnt in jnts:
-        createCircleCtrl(ctrlNameSpace,
-                         jntNameSpace,
-                         jnt,
-                         radius=radius,
-                         color=color,
-                         constraint=constraint)
+        circleCtrl = createCircleCtrl(ctrlNameSpace,
+                                      jntNameSpace,
+                                      jnt,
+                                      radius=radius,
+                                      color=color,
+                                      constraint=constraint)[0]
+        if (constraint == "orient"):
+            lockAndHideAttributes(circleCtrl)
+        elif (constraint == "parent"):
+            lockAndHideAttributes(circleCtrl, translate=False)
 
 
 def setFkCtrlHierarchy(jnts, jntNameSpace, ctrlNameSpace):
@@ -81,3 +85,30 @@ def setFkCtrlHierarchy(jnts, jntNameSpace, ctrlNameSpace):
         zeroGrp = f"{ctrlNameSpace}:zero{jnt}"
         parentCtrl = f"{ctrlNameSpace}:ctrl{parentJnt}"
         cmds.parent(zeroGrp, parentCtrl)
+
+
+def lockAndHideAttributes(ctrl: str,
+                          translate: bool = True,
+                          rotation: bool = False,
+                          scale: bool = True,
+                          visibility: bool = True,
+                          others: list = []):
+    '''
+    ctrl: the full name with namespace, e.g.ctrl:worldCtrl
+    '''
+    attributesToHide = []
+    if (translate):
+        attributesToHide.extend(["tx", "ty", "tz"])
+    if (rotation):
+        attributesToHide.extend(["rx", "ry", "rz"])
+    if (scale):
+        attributesToHide.extend(["sx", "sy", "sz"])
+    if (visibility):
+        attributesToHide.append("visibility")
+    attributesToHide.extend(others)
+
+    for attr in attributesToHide:
+        fullAttrName = f"{ctrl}.{attr}"
+        cmds.setAttr(fullAttrName, lock=True)
+        cmds.setAttr(fullAttrName, keyable=False)
+        cmds.setAttr(fullAttrName, channelBox=False)

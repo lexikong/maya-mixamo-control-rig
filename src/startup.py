@@ -50,7 +50,7 @@ def process(parentGrp: str):
 
     cog.createCogCtrl(nameSpace)
 
-    world.createWorldCtrl()
+    world.createWorldCtrl(nameSpace)
 
     cmds.select(clear=True)
 

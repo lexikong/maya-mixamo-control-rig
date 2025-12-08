@@ -1,5 +1,5 @@
 from maya import cmds
-from utils import multiJntFkCtrl, setFkCtrlHierarchy
+from utils import multiJntFkCtrl, setFkCtrlHierarchy, lockAndHideAttributes
 from constants import CTRL_NAMESPACE, HEAD, HEAD_END, NECK, VIOLET, SPINES
 from shapes import drawCtrlBox
 import math
@@ -42,14 +42,12 @@ def createHeadBox(jntNameSpace: str):
     # add orient constraint
     cmds.orientConstraint(ctrlBox, headJntFull)
 
+    # lock and hide unused attributes
+    lockAndHideAttributes(ctrlBox)
+
 
 def setNeckHeadHierarchy(jntNameSpace):
     jnts = []
     jnts.append(HEAD)
     jnts.append(NECK[0])
     setFkCtrlHierarchy(jnts, jntNameSpace, CTRL_NAMESPACE)
-'''
-    # put neck ctrl under spine ctrl
-    neckZeroGrp = f"{CTRL_NAMESPACE}:zero{NECK[0]}"
-    spineCtrl = f"{CTRL_NAMESPACE}:ctrl{SPINES[0]}"
-    cmds.parent(neckZeroGrp, spineCtrl)'''
