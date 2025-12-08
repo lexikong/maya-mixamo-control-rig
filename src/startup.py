@@ -31,7 +31,8 @@ def process(parentGrp: str):
         nameSpace = ""
     else:
         nameSpace = parentGrp.split(":", 1)[0]
-    fingers.fingers(parentGrp, nameSpace)
+    # fingers.fingers(parentGrp, nameSpace)
+    fingers.createFingerCtrls(nameSpace)
     orientJoints.orientJoints(nameSpace)
 
     leftArm = arm.MixamoArm(nameSpace, limbConfig.leftArmParams)

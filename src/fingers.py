@@ -1,24 +1,13 @@
 # Assuming all mixamo characters share the same joints naming convention
 # Also assuming they all have the same joints
 from maya import cmds
-from constants import *  # noqa: F403, F405
+from constants import HANDS, FINGERS, NUM_FINGER_JOINTS, CTRL_NAMESPACE, RED
+from utils import multiJntFkCtrl
 
 
-# TODO: cartoon characters e.g. Doopy only has 4 fingers
-def fingers(parentGrp: str, jntNameSpace: str):
-    # TODO: try mirroring to the other side instead of running all over again
+def createFingerCtrls(jntNameSpace: str):
     for hand in HANDS:
-        for fngr in FINGERS:
-            for i in range(1, NUM_FINGER_JOINTS):
-                fngrJntName = f"{hand}{fngr}{str(i)}"
-                # fngrJntNameFull = f"{jntNameSpace}:{fngrJntName}"
-                # if (not cmds.objExists(fngrJntNameFull)):
-                #     break
-                createCircleCtrl(CTRL_NAMESPACE, jntNameSpace, fngrJntName)
-    # Set hierarchy to ctrls
-    for hand in HANDS:
-        # Create a group for all finger controls,
-        # and match transform to the wrist joint
+        # create a group to hold all ctrls
         ctrlGrp = cmds.group(world=True,
                              empty=True,
                              name=f"{CTRL_NAMESPACE}:{hand}CtrlGrp")
@@ -26,47 +15,19 @@ def fingers(parentGrp: str, jntNameSpace: str):
         cmds.matchTransform(ctrlGrp, wristJnt)
 
         for fngr in FINGERS:
-            for i in range(NUM_FINGER_JOINTS-1, 1, -1):
-                setFingerCtrlHierarchy(CTRL_NAMESPACE, hand, fngr, i)
-            # Put the finger controls into one group
-            topLvlFngr = f"{CTRL_NAMESPACE}:zero{hand}{fngr}1"
-            cmds.parent(topLvlFngr, ctrlGrp)
+            fngrJnt = f"{jntNameSpace}:{hand}{fngr}1"
+            # cartoon characters only have 4 fingers
+            if (not cmds.objExists(fngrJnt)):
+                break
+            jnts = []
+            for i in range(NUM_FINGER_JOINTS-1, 0, -1):
+                jnts.append(f"{hand}{fngr}{str(i)}")
+            topLvlGrp = multiJntFkCtrl(jnts,
+                                       jntNameSpace,
+                                       CTRL_NAMESPACE,
+                                       radius=2.2,
+                                       color=RED)
+            cmds.parent(topLvlGrp, ctrlGrp)
 
         # Parent constrain the control group to the wrist joint
         cmds.parentConstraint(wristJnt, ctrlGrp)
-
-
-def createCircleCtrl(rigNameSpace: str, jntNameSpace: str, jntName: str):
-    # TODO: use the function from utils.py
-    # create nurbs circle and zero group
-    # TODO: non-hardcoded radius
-    if ("Thumb1" in jntName):
-        radius = 2.2
-    else:
-        radius = 1.8
-    nurbsCircle = cmds.circle(name=f"{rigNameSpace}:ctrl{jntName}",
-                              normal=UP,
-                              radius=radius)
-    # set color to be red
-    # TODO: allow user to customize color
-    shapeNode = cmds.listRelatives(nurbsCircle, shapes=True)[0]
-    cmds.setAttr(f"{shapeNode}.overrideEnabled", 1)
-    cmds.setAttr(f'{shapeNode}.overrideColor', RED)
-    zeroGrp = cmds.group(nurbsCircle, name=f"{rigNameSpace}:zero{jntName}")
-    # match transformation
-    jntNameFull = f"{jntNameSpace}:{jntName}"
-    cmds.matchTransform(zeroGrp, jntNameFull)
-    # set parent constraint
-    cmds.parentConstraint(nurbsCircle, jntNameFull)
-
-
-def setFingerCtrlHierarchy(rigNameSpace: str, hand: str, fngr: str, index: int):
-    zeroGrp = f"{rigNameSpace}:zero{hand}{fngr}{str(index)}"
-    parentCtrl = f"{rigNameSpace}:ctrl{hand}{fngr}{str(index-1)}"
-    cmds.parent(zeroGrp, parentCtrl)
-
-
-def createFingerCtrls(jntNameSpace: str):
-    # TODO: use multiJntFkCtrl() instead
-    pass
-

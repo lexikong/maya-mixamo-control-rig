@@ -64,6 +64,8 @@ def multiJntFkCtrl(jnts, jntNameSpace, ctrlNameSpace, radius=25, color=YELLOW, c
     # e.g. ["Spine2", "Spine1", "Spine"]
     createFkCtrls(jnts, jntNameSpace, ctrlNameSpace, radius, color, constraint)
     setFkCtrlHierarchy(jnts, jntNameSpace, ctrlNameSpace)
+    topLvlGrp = f"{ctrlNameSpace}:zero{jnts[-1]}"
+    return topLvlGrp
 
 
 def createFkCtrls(jnts, jntNameSpace, ctrlNameSpace, radius, color, constraint: str = "orient"):
