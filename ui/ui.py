@@ -1,4 +1,6 @@
 import maya.cmds as cmds
+from ..Controls import startup
+
 
 # UI elements id
 NS_FIELD_ID = "nameSpaceField"
@@ -45,3 +47,4 @@ def createCtrls(*args):
 
     print(f"Namespace entered: {ctrlNameSpace}")
     print(f"LOD selected: {skeletonLOD}")
+    startup.start()

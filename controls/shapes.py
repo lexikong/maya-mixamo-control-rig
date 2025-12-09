@@ -1,5 +1,5 @@
 from maya import cmds
-from constants import UP, RED
+from .constants import UP, RED
 
 
 # draw different control shapes

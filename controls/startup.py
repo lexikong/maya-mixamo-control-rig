@@ -1,13 +1,30 @@
 from maya import cmds
 import sys
-import importlib
+
+from . import fingers
+from . import arms_old as arms
+from . import constants
+from . import orientJoints
+from . import utils
+from . import shapes
+from . import arm
+from . import foot
+from . import leg
+from . import limb
+from . import limbParams
+from . import limbConfig
+from . import spine
+from . import head
+from . import shoulders
+from . import cog
+from . import world
 
 
 def importMayaScript():
     # add the script directory to the system path
     # TODO: make this work when being distributed as a package
     myScriptDir = cmds.internalVar(userScriptDir=True)
-    setScriptDir = myScriptDir + 'mixamoControlRig/src/'
+    setScriptDir = myScriptDir + 'mixamoControlRig/controls/'
     sys.path.append(setScriptDir)
 
 
@@ -65,43 +82,9 @@ def cleanup():
     arms.cleanup()
 
 
-if __name__ == "__main__":
+def start():
+    print("startup called")
     importMayaScript()
-    import fingers
-    import arms_old as arms
-    import constants
-    import orientJoints
-    import utils
-    import shapes
-    import arm
-    import foot
-    import leg
-    import limb
-    import limbParams
-    import limbConfig
-    import spine
-    import head
-    import shoulders
-    import cog
-    import world
-
-    importlib.reload(shapes)
-    importlib.reload(utils)
-    importlib.reload(constants)
-    importlib.reload(orientJoints)
-    importlib.reload(fingers)
-    importlib.reload(arms)
-    importlib.reload(limb)
-    importlib.reload(arm)
-    importlib.reload(foot)
-    importlib.reload(leg)
-    importlib.reload(limbParams)
-    importlib.reload(limbConfig)
-    importlib.reload(spine)
-    importlib.reload(head)
-    importlib.reload(shoulders)
-    importlib.reload(cog)
-    importlib.reload(world)
 
     cleanup()
     preprocess()

@@ -1,5 +1,5 @@
-from limbParams import mixamoArmParams, mixamoLegParams
-import constants
+from .limbParams import mixamoArmParams, mixamoLegParams
+from . import constants
 
 
 leftArmParams = mixamoArmParams(

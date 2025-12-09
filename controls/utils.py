@@ -1,6 +1,6 @@
 from maya import cmds
-from constants import RED, YELLOW
-from shapes import drawCtrlCircle, drawCtrlCube, drawCtrlCross
+from .constants import RED, YELLOW
+from .shapes import drawCtrlCircle, drawCtrlCube, drawCtrlCross
 
 
 # TODO: move match transformation and constraint out?

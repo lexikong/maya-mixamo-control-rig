@@ -1,11 +1,7 @@
 from maya import cmds
-from utils import multiJntFkCtrl, createCircleCtrl, lockAndHideAttributes
-from constants import YELLOW
-from shapes import drawCtrlBox, drawCtrlCube, drawCtrlCircle
-# set up toetip position
-# set up heel position
-# ball ctrl shape
-# toe ctrl shape
+from .utils import multiJntFkCtrl, createCircleCtrl, lockAndHideAttributes
+from .constants import YELLOW
+from .shapes import drawCtrlBox, drawCtrlCube, drawCtrlCircle
 
 
 class MixamoFoot:

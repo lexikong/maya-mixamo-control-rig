@@ -1,14 +1,14 @@
 from maya import cmds
-from shapes import drawCtrlCircle
-from constants import HIP, CTRL_NAMESPACE, ORANGE, WRISTS, LEGS
-from utils import lockAndHideAttributes
+from .shapes import drawCtrlCircle
+from .constants import HIP, CTRL_NAMESPACE, ORANGE, WRISTS, LEGS
+from .utils import lockAndHideAttributes
 
 
 def createCogCtrl(jntNameSpace: str):
     # create control circle
     cogCtrlGrp = drawCtrlCircle(name=f"{CTRL_NAMESPACE}:ctrlCog",
-                             radius=50,
-                             color=ORANGE)
+                                radius=50,
+                                color=ORANGE)
     cogCtrl = cogCtrlGrp[0]
     cogCtrlShape = cogCtrlGrp[1]
 

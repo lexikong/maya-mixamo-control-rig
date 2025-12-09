@@ -1,6 +1,6 @@
 from maya import cmds
-from constants import CTRL_NAMESPACE, ORANGE, HANDS, ELBOWS, ANKLES, KNEES, HIP
-from utils import drawCtrlCircle, lockAndHideAttributes
+from .constants import CTRL_NAMESPACE, ORANGE, HANDS, ELBOWS, ANKLES, KNEES, HIP
+from .utils import drawCtrlCircle, lockAndHideAttributes
 
 
 def createWorldCtrl(nameSpace: str):

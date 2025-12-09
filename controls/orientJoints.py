@@ -1,5 +1,5 @@
 from maya import cmds
-from constants import ARMS, ELBOWS, WRISTS, LEGS, KNEES, ANKLES, BALL, HIP
+from .constants import ARMS, ELBOWS, WRISTS, LEGS, KNEES, ANKLES, BALL, HIP
 
 
 def orientJoints(jntNameSpace: str):

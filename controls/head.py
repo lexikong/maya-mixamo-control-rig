@@ -1,7 +1,7 @@
 from maya import cmds
-from utils import multiJntFkCtrl, setFkCtrlHierarchy, lockAndHideAttributes
-from constants import CTRL_NAMESPACE, HEAD, HEAD_END, NECK, VIOLET, SPINES
-from shapes import drawCtrlBox
+from .utils import multiJntFkCtrl, setFkCtrlHierarchy, lockAndHideAttributes
+from .constants import CTRL_NAMESPACE, HEAD, HEAD_END, NECK, VIOLET, SPINES
+from .shapes import drawCtrlBox
 import math
 
 
