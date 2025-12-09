@@ -1,6 +1,7 @@
 from maya import cmds
 from shapes import drawCtrlCircle
 from constants import HIP, CTRL_NAMESPACE, ORANGE, WRISTS, LEGS
+from utils import lockAndHideAttributes
 
 
 def createCogCtrl(jntNameSpace: str):
@@ -24,6 +25,7 @@ def createCogCtrl(jntNameSpace: str):
     cmds.matchTransform(cogZeroGrp, hipJnt)
 
     setCogHierarchy(cogCtrl)
+    lockAndHideAttributes(cogCtrl, translate=False)
 
 
 def setCogHierarchy(cogCtrl):
