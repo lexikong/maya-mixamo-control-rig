@@ -1,9 +1,9 @@
 from .limb import MixamoLimb
 from maya import cmds
-from .utils import createCircleCtrl, lockAndHideAttributes
-from .constants import YELLOW, FRONT
-from .shapes import drawCtrlCube, drawCtrlCircle
-from .limbParams import mixamoLegParams
+from ..Utils.helpers import createCircleCtrl, lockAndHideAttributes
+from ..Utils.constants import YELLOW, FRONT
+from ..Utils.shapes import drawCtrlCube, drawCtrlCircle
+from ..Utils.limbParams import mixamoLegParams
 from .foot import MixamoFoot
 
 

@@ -1,7 +1,11 @@
 from .limb import MixamoLimb
-from .limbParams import mixamoArmParams
+from ..Utils.limbParams import mixamoArmParams
 from maya import cmds
-from .utils import createCubeCtrl, multiJntFkCtrl, lockAndHideAttributes
+from ..Utils.helpers import (
+    createCubeCtrl,
+    multiJntFkCtrl,
+    lockAndHideAttributes
+)
 
 
 class MixamoArm(MixamoLimb):

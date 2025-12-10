@@ -1,6 +1,6 @@
 from maya import cmds
-from .utils import multiJntFkCtrl
-from .constants import CTRL_NAMESPACE, SPINES, PINK, SHOULDERS, NECK, ARMS, LEGS
+from ..Utils.helpers import multiJntFkCtrl
+from ..Utils.constants import CTRL_NAMESPACE, SPINES, PINK, SHOULDERS, NECK, ARMS, LEGS
 
 
 def createSpineCtrls(jntNameSpace: str):

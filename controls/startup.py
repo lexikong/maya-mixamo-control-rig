@@ -1,23 +1,24 @@
 from maya import cmds
 import sys
 
-from . import fingers
-from . import arms_old as arms
-from . import constants
-from . import orientJoints
-from . import utils
-from . import shapes
-from . import arm
-from . import foot
-from . import leg
-from . import limb
-from . import limbParams
-from . import limbConfig
-from . import spine
-from . import head
-from . import shoulders
-from . import cog
-from . import world
+from .Utils import constants
+from .Utils import orientJoints
+from .Utils import helpers
+from .Utils import shapes
+from .Utils import limbParams
+from .Utils import limbConfig
+
+from .Rigs import fingers
+from .Rigs import arms_old as arms
+from .Rigs import arm
+from .Rigs import foot
+from .Rigs import leg
+from .Rigs import limb
+from .Rigs import spine
+from .Rigs import head
+from .Rigs import shoulders
+from .Rigs import cog
+from .Rigs import world
 
 
 def importMayaScript():
@@ -83,7 +84,6 @@ def cleanup():
 
 
 def start():
-    print("startup called")
     importMayaScript()
 
     cleanup()

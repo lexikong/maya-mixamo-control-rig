@@ -1,8 +1,8 @@
 # Assuming all mixamo characters share the same joints naming convention
 # Also assuming they all have the same joints
 from maya import cmds
-from .constants import HANDS, FINGERS, NUM_FINGER_JOINTS, CTRL_NAMESPACE, RED
-from .utils import multiJntFkCtrl
+from ..Utils.constants import HANDS, FINGERS, NUM_FINGER_JOINTS, CTRL_NAMESPACE, RED
+from ..Utils.helpers import multiJntFkCtrl
 
 
 def createFingerCtrls(jntNameSpace: str):

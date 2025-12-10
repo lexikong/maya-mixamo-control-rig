@@ -1,7 +1,7 @@
 from maya import cmds
-from .shapes import drawCtrlCircle
-from .constants import HIP, CTRL_NAMESPACE, ORANGE, WRISTS, LEGS
-from .utils import lockAndHideAttributes
+from ..Utils.shapes import drawCtrlCircle
+from ..Utils.constants import HIP, CTRL_NAMESPACE, ORANGE, WRISTS, LEGS
+from ..Utils.helpers import lockAndHideAttributes
 
 
 def createCogCtrl(jntNameSpace: str):

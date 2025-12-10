@@ -1,8 +1,12 @@
 from maya import cmds
 from abc import ABC, abstractmethod
-from .utils import createCircleCtrl, createCubeCtrl, createCrossCtrl, lockAndHideAttributes
-from .constants import YELLOW
-from .limbParams import mixamoLimbParams
+from ..Utils.helpers import (
+    createCircleCtrl,
+    createCubeCtrl,
+    createCrossCtrl,
+    lockAndHideAttributes)
+from ..Utils.constants import YELLOW
+from ..Utils.limbParams import mixamoLimbParams
 
 
 class MixamoLimb(ABC):

@@ -1,6 +1,6 @@
 from maya import cmds
-from .utils import createCircleCtrl, lockAndHideAttributes
-from .constants import CTRL_NAMESPACE, SHOULDERS, ARMS, YELLOW
+from ..Utils.helpers import createCircleCtrl, lockAndHideAttributes
+from ..Utils.constants import CTRL_NAMESPACE, SHOULDERS, ARMS, YELLOW
 
 
 def createShoulderCtrls(jntNameSpace: str):
