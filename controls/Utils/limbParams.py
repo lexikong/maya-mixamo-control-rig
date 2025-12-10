@@ -3,7 +3,6 @@ from dataclasses import dataclass
 
 @dataclass
 class mixamoLimbParams:
-    ctrlNameSpace: str
     firstJnt: str
     secondJnt: str
     thirdJnt: str

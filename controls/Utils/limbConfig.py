@@ -3,7 +3,6 @@ from . import constants
 
 
 leftArmParams = mixamoArmParams(
-    ctrlNameSpace=constants.CTRL_NAMESPACE,
     # TODO: move joint names into constants too
     firstJnt="LeftArm",
     secondJnt="LeftForeArm",
@@ -14,7 +13,6 @@ leftArmParams = mixamoArmParams(
 )
 
 rightArmParams = mixamoArmParams(
-    ctrlNameSpace=constants.CTRL_NAMESPACE,
     firstJnt="RightArm",
     secondJnt="RightForeArm",
     thirdJnt="RightHand",
@@ -24,7 +22,6 @@ rightArmParams = mixamoArmParams(
 )
 
 leftLegParams = mixamoLegParams(
-    ctrlNameSpace=constants.CTRL_NAMESPACE,
     firstJnt="LeftUpLeg",
     secondJnt="LeftLeg",
     thirdJnt="LeftFoot",
@@ -37,7 +34,6 @@ leftLegParams = mixamoLegParams(
 )
 
 rightLegParams = mixamoLegParams(
-    ctrlNameSpace=constants.CTRL_NAMESPACE,
     firstJnt="RightUpLeg",
     secondJnt="RightLeg",
     thirdJnt="RightFoot",

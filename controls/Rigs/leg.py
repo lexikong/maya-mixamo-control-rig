@@ -10,8 +10,10 @@ from .foot import MixamoFoot
 class MixamoLeg(MixamoLimb):
     def __init__(self,
                  jntNameSpace: str,
+                 ctrlNameSpace: str,
                  legConfig: mixamoLegParams):
         super().__init__(jntNameSpace,
+                         ctrlNameSpace,
                          legConfig)
         self.toeJnt = legConfig.toeJnt
         self.ballJnt = legConfig.ballJnt

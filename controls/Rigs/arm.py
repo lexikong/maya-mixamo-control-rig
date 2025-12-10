@@ -11,8 +11,9 @@ from ..Utils.helpers import (
 class MixamoArm(MixamoLimb):
     def __init__(self,
                  jntNameSpace: str,
+                 ctrlNameSpace: str,
                  armConfig: mixamoArmParams):
-        super().__init__(jntNameSpace, armConfig)
+        super().__init__(jntNameSpace, ctrlNameSpace, armConfig)
 
     def createFkCtrls(self):
         jntsFull = cmds.listRelatives(self._firstJntFkFull, allDescendents=True)

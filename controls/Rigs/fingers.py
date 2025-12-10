@@ -1,16 +1,16 @@
 # Assuming all mixamo characters share the same joints naming convention
 # Also assuming they all have the same joints
 from maya import cmds
-from ..Utils.constants import HANDS, FINGERS, NUM_FINGER_JOINTS, CTRL_NAMESPACE, RED
+from ..Utils.constants import HANDS, FINGERS, NUM_FINGER_JOINTS, RED
 from ..Utils.helpers import multiJntFkCtrl
 
 
-def createFingerCtrls(jntNameSpace: str):
+def createFingerCtrls(jntNameSpace: str, ctrlNameSpace: str):
     for hand in HANDS:
         # create a group to hold all ctrls
         ctrlGrp = cmds.group(world=True,
                              empty=True,
-                             name=f"{CTRL_NAMESPACE}:{hand}CtrlGrp")
+                             name=f"{ctrlNameSpace}:{hand}CtrlGrp")
         wristJnt = f"{jntNameSpace}:{hand}"
         cmds.matchTransform(ctrlGrp, wristJnt)
 
@@ -24,7 +24,7 @@ def createFingerCtrls(jntNameSpace: str):
                 jnts.append(f"{hand}{fngr}{str(i)}")
             topLvlGrp = multiJntFkCtrl(jnts,
                                        jntNameSpace,
-                                       CTRL_NAMESPACE,
+                                       ctrlNameSpace,
                                        radius=2.2,
                                        color=RED)
             cmds.parent(topLvlGrp, ctrlGrp)

@@ -1,5 +1,5 @@
 import maya.cmds as cmds
-from ..Controls import startup
+from ..Controls.startup import RigBuilder
 
 
 # UI elements id
@@ -45,6 +45,5 @@ def createCtrls(*args):
     ctrlNameSpace = cmds.textFieldGrp(NS_FIELD_ID, query=True, text=True)
     skeletonLOD = cmds.optionMenuGrp(SKELETON_MENU_ID, query=True, select=True)
 
-    print(f"Namespace entered: {ctrlNameSpace}")
-    print(f"LOD selected: {skeletonLOD}")
-    startup.start()
+    rigBuilder = RigBuilder()
+    rigBuilder.start(ctrlNameSpace, skeletonLOD)

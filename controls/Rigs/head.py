@@ -1,23 +1,23 @@
 from maya import cmds
 from ..Utils.helpers import multiJntFkCtrl, setFkCtrlHierarchy, lockAndHideAttributes
-from ..Utils.constants import CTRL_NAMESPACE, HEAD, HEAD_END, NECK, VIOLET, SPINES
+from ..Utils.constants import HEAD, HEAD_END, NECK, VIOLET, SPINES
 from ..Utils.shapes import drawCtrlBox
 import math
 
 
-def createHeadCtrls(jntNameSpace: str):
-    createNeckCtrl(jntNameSpace)
-    createHeadBox(jntNameSpace)
-    setNeckHeadHierarchy(jntNameSpace)
+def createHeadCtrls(jntNameSpace: str, ctrlNameSpace: str):
+    createNeckCtrl(jntNameSpace, ctrlNameSpace)
+    createHeadBox(jntNameSpace, ctrlNameSpace)
+    setNeckHeadHierarchy(jntNameSpace, ctrlNameSpace)
 
 
-def createNeckCtrl(jntNameSpace: str):
+def createNeckCtrl(jntNameSpace: str, ctrlNameSpace: str):
     # create neck ctrl
     neckJnt = NECK
-    multiJntFkCtrl(neckJnt, jntNameSpace, CTRL_NAMESPACE, radius=15, color=VIOLET)
+    multiJntFkCtrl(neckJnt, jntNameSpace, ctrlNameSpace, radius=15, color=VIOLET)
 
 
-def createHeadBox(jntNameSpace: str):
+def createHeadBox(jntNameSpace: str, ctrlNameSpace: str):
     # get the distance between head and head_end joints
     headTopJnt = HEAD_END
     headTopJntFull = f"{jntNameSpace}:{headTopJnt}"
@@ -27,11 +27,11 @@ def createHeadBox(jntNameSpace: str):
 
     # create the control box and zero group
     headJnt = HEAD
-    ctrlBox = drawCtrlBox(name=f"{CTRL_NAMESPACE}:ctrl{headJnt}",
+    ctrlBox = drawCtrlBox(name=f"{ctrlNameSpace}:ctrl{headJnt}",
                           size=[dist, dist, dist],
                           color=VIOLET,
                           pivot="bottom")
-    zeroGrp = cmds.group(empty=True, name=f"{CTRL_NAMESPACE}:zero{headJnt}")
+    zeroGrp = cmds.group(empty=True, name=f"{ctrlNameSpace}:zero{headJnt}")
     cmds.matchTransform(zeroGrp, ctrlBox)
     cmds.parent(ctrlBox, zeroGrp)
 
@@ -46,8 +46,8 @@ def createHeadBox(jntNameSpace: str):
     lockAndHideAttributes(ctrlBox)
 
 
-def setNeckHeadHierarchy(jntNameSpace):
+def setNeckHeadHierarchy(jntNameSpace, ctrlNameSpace):
     jnts = []
     jnts.append(HEAD)
     jnts.append(NECK[0])
-    setFkCtrlHierarchy(jnts, jntNameSpace, CTRL_NAMESPACE)
+    setFkCtrlHierarchy(jnts, jntNameSpace, ctrlNameSpace)

@@ -13,9 +13,10 @@ class MixamoLimb(ABC):
 
     def __init__(self,
                  jntNameSpace: str,
+                 ctrlNameSpace: str,
                  limbConfig: mixamoLimbParams):
         self.jntNameSpace = jntNameSpace
-        self.ctrlNameSpace = limbConfig.ctrlNameSpace
+        self.ctrlNameSpace = ctrlNameSpace
         self.firstJnt = limbConfig.firstJnt
         self.secondJnt = limbConfig.secondJnt
         self.thirdJnt = limbConfig.thirdJnt
