@@ -9,7 +9,6 @@ from .Utils import limbParams
 from .Utils import limbConfig
 
 from .Rigs import fingers
-from .Rigs import arms_old as arms
 from .Rigs import arm
 from .Rigs import foot
 from .Rigs import leg
@@ -79,12 +78,21 @@ def cleanup():
     ctrls = cmds.ls(f"{constants.CTRL_NAMESPACE}:*")
     if ctrls:
         cmds.delete(ctrls)
-    # remove arm FK and IK joints
-    arms.cleanup()
+    # remove FK and IK joints
+    fkJoints = cmds.ls("*Fk", recursive=True)
+    if fkJoints:
+        cmds.delete(fkJoints)
+    ikJoints = cmds.ls("*Ik", recursive=True)
+    if ikJoints:
+        cmds.delete(ikJoints)
+    reverseNodes = cmds.ls(type="reverse", recursive=True)
+    for node in reverseNodes:
+        cmds.delete(node)
 
 
 def start():
     importMayaScript()
 
     cleanup()
+    # TODO: check-up instead of cleanup
     preprocess()
