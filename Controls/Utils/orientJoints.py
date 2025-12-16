@@ -14,6 +14,12 @@ def orientJoints(jntNameSpace: str):
         cmds.setAttr(f"{wristJnt}.jointOrientX", 0.0)
         cmds.setAttr(f"{elbowJnt}.jointOrientY", 0.0)
         cmds.setAttr(f"{wristJnt}.jointOrientY", 0.0)
+        # make sure there is a positive z value on elboe joint
+        elbowJointOrientZ = cmds.getAttr(f"{elbowJnt}.jointOrientZ")
+        if (elbowJointOrientZ < 0):
+            cmds.setAttr(f"{elbowJnt}.jointOrientZ", elbowJointOrientZ * -1)
+        elif (elbowJointOrientZ == 0):
+            cmds.setAttr(f"{elbowJnt}.jointOrientZ", 0.05)
         cmds.setAttr(f"{elbowJnt}.translateX", 0.0)
         cmds.setAttr(f"{wristJnt}.translateX", 0.0)
         cmds.setAttr(f"{elbowJnt}.translateZ", 0.0)
