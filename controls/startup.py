@@ -53,7 +53,7 @@ class RigBuilder:
             jntNameSpace = selected.split(":")[0]
 
         orientJoints.orientJoints(jntNameSpace)
-        #fingers.createFingerCtrls(jntNameSpace, self.ctrlNameSpace)
+        fingers.createFingerCtrls(jntNameSpace, self.ctrlNameSpace)
 
         leftArm = arm.MixamoArm(jntNameSpace, self.ctrlNameSpace, limbConfig.leftArmParams)
         leftLeg = leg.MixamoLeg(jntNameSpace, self.ctrlNameSpace, limbConfig.leftLegParams)

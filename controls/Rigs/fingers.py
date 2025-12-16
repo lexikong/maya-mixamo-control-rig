@@ -1,33 +1,38 @@
 # Assuming all mixamo characters share the same joints naming convention
 # Also assuming they all have the same joints
 from maya import cmds
-from ..Utils.constants import HANDS, FINGERS, NUM_FINGER_JOINTS, RED
+from ..Utils.constants import HANDS, NUM_FINGER_JOINTS, RED
 from ..Utils.helpers import multiJntFkCtrl
+from ..Utils.userInput import UserInput
 
 
 def createFingerCtrls(jntNameSpace: str, ctrlNameSpace: str):
-    for hand in HANDS:
-        # create a group to hold all ctrls
-        ctrlGrp = cmds.group(world=True,
-                             empty=True,
-                             name=f"{ctrlNameSpace}:{hand}CtrlGrp")
-        wristJnt = f"{jntNameSpace}:{hand}"
-        cmds.matchTransform(ctrlGrp, wristJnt)
+    fngrNames = UserInput.getFingers()
+    # create finger ctrls if fngrNames is not empty
+    # i.e. there are finger joints
+    if (fngrNames):
+        for hand in HANDS:
+            # create a group to hold all ctrls
+            ctrlGrp = cmds.group(world=True,
+                                empty=True,
+                                name=f"{ctrlNameSpace}:{hand}CtrlGrp")
+            wristJnt = f"{jntNameSpace}:{hand}"
+            cmds.matchTransform(ctrlGrp, wristJnt)
 
-        for fngr in FINGERS:
-            fngrJnt = f"{jntNameSpace}:{hand}{fngr}1"
-            # cartoon characters only have 4 fingers
-            if (not cmds.objExists(fngrJnt)):
-                break
-            jnts = []
-            for i in range(NUM_FINGER_JOINTS-1, 0, -1):
-                jnts.append(f"{hand}{fngr}{str(i)}")
-            topLvlGrp = multiJntFkCtrl(jnts,
-                                       jntNameSpace,
-                                       ctrlNameSpace,
-                                       radius=2.2,
-                                       color=RED)
-            cmds.parent(topLvlGrp, ctrlGrp)
+            for fngr in fngrNames:
+                fngrJnt = f"{jntNameSpace}:{hand}{fngr}1"
+                # cartoon characters only have 4 fingers
+                if (not cmds.objExists(fngrJnt)):
+                    break
+                jnts = []
+                for i in range(NUM_FINGER_JOINTS-1, 0, -1):
+                    jnts.append(f"{hand}{fngr}{str(i)}")
+                topLvlGrp = multiJntFkCtrl(jnts,
+                                        jntNameSpace,
+                                        ctrlNameSpace,
+                                        radius=2.2,
+                                        color=RED)
+                cmds.parent(topLvlGrp, ctrlGrp)
 
-        # Parent constrain the control group to the wrist joint
-        cmds.parentConstraint(wristJnt, ctrlGrp)
+            # Parent constrain the control group to the wrist joint
+            cmds.parentConstraint(wristJnt, ctrlGrp)

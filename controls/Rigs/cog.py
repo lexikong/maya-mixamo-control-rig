@@ -34,7 +34,9 @@ def setCogHierarchy(cogCtrl, ctrlNameSpace):
     cmds.parent(hipZeroGrp, cogCtrl)
     for hand in WRISTS:
         handGrp = f"{ctrlNameSpace}:{hand}CtrlGrp"
-        cmds.parent(handGrp, cogCtrl)
+        # the hand ctrl grp will not exist if there is no finger joints
+        if (cmds.objExists(handGrp)):
+            cmds.parent(handGrp, cogCtrl)
     for leg in LEGS:
         legIkFkBlendGrp = f"{ctrlNameSpace}:zero{leg}IkFkBlend"
         cmds.parent(legIkFkBlendGrp, cogCtrl)
