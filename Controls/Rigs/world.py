@@ -39,8 +39,7 @@ def setWorldHierarchy(worldCtrl: str, ctrlNameSpace: str):
 
 def setScaleCtrl(jntNameSpace: str, worldCtrl: str):
     hipJnt = f"{jntNameSpace}:{HIP}"
-    # set parent and scale constraint between world ctrl and hip joint
-    cmds.parentConstraint(worldCtrl, hipJnt, mo=True)
+    # set scale constraint between world ctrl and hip joint
     cmds.scaleConstraint(worldCtrl, hipJnt)
     # add rigScale attribute
     rigScaleAttr = "rigScale"
