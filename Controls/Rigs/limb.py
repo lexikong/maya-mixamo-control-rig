@@ -1,12 +1,12 @@
 from maya import cmds
 from abc import ABC, abstractmethod
 from ..Utils.helpers import (
-    createCircleCtrl,
     createCubeCtrl,
     createCrossCtrl,
     lockAndHideAttributes)
 from ..Utils.constants import YELLOW
 from ..Utils.limbParams import mixamoLimbParams
+from ..Utils.shapes import drawCtrlCube
 
 
 class MixamoLimb(ABC):
@@ -33,10 +33,9 @@ class MixamoLimb(ABC):
         (self._firstJntIkFull,
          self._sndJntIkFull,
          self._thirdJntIkFull) = self.duplicateThreeJointChain("Ik")
-        # create FK controls
+
         self.createFkCtrls()
         self.createIkCtrls()
-        # create IKFK blend ctrl
         self.createIkFkBlend()
 
         self.endJointOrient()
@@ -72,14 +71,27 @@ class MixamoLimb(ABC):
         # Add annotation to pole vector
         self.poleVectorAnnotation(poleVec)
 
+    @abstractmethod
+    def setupEndJntCtrl(self, ctrlJnt: str, jntName: str, ctrlObj: str):
+        pass
+
     def createIkHandle(self):
         self.createIkCtrlObj()
         ikHandle = self.setupIkHandle()
         return ikHandle
 
-    @abstractmethod
     def createIkCtrlObj(self):
-        pass
+        ctrlJnt = cmds.joint(
+            name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik",
+            p=[0, 0, 0])
+        cubeCtrl = drawCtrlCube(
+            name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}",
+            size=15.0)
+        cmds.makeIdentity(cubeCtrl, apply=True, r=True)
+
+        self.setupEndJntCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)
+        self.ikCtrl = ctrlJnt
+        lockAndHideAttributes(self.ikCtrl, translate=False, others=["radi"])
 
     def setupIkHandle(self):
         ikHandle = cmds.ikHandle(name=f"{self.ctrlNameSpace}:ikHandle{self.thirdJnt}",
@@ -156,7 +168,7 @@ class MixamoLimb(ABC):
                                                   f"{self.firstJnt}IkFkBlend",
                                                   size=7.0,
                                                   color=YELLOW)
-        
+
         # put the blend control around the first joint plus offset
         cmds.matchTransform(blendZeroGrp, sndJntFull, pos=True, rot=False, scl=False)
 

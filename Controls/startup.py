@@ -92,8 +92,6 @@ class RigBuilder:
             cmds.delete(node)
 
     def start(self, ctrlNameSpace: str, skeletonIndex: int):
-        #self.importMayaScript()
-
         # TODO: check-up instead of cleanup
         UserInput.setCtrlNS(ctrlNameSpace)
         UserInput.setFingers(skeletonIndex)

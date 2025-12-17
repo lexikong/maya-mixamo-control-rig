@@ -2,7 +2,7 @@ from .limb import MixamoLimb
 from maya import cmds
 from ..Utils.helpers import createCircleCtrl, lockAndHideAttributes
 from ..Utils.constants import YELLOW, FRONT
-from ..Utils.shapes import drawCtrlCube, drawCtrlCircle
+from ..Utils.shapes import drawCtrlCircle
 from ..Utils.limbParams import mixamoLegParams
 from .foot import MixamoFoot
 
@@ -62,7 +62,7 @@ class MixamoLeg(MixamoLimb):
                                     normal=FRONT,
                                     color=YELLOW)
         cmds.makeIdentity(ctrlCircle, apply=True, r=True)
-        self.setupAnkleCtrl(ctrlJnt, jntName, ctrlCircle)
+        self.setupEndJntCtrl(ctrlJnt, jntName, ctrlCircle)
 
         jntNameFull = f"{self.jntNameSpace}:{jntName}"
         cmds.orientConstraint(ctrlJnt, jntNameFull, mo=True)
@@ -72,20 +72,7 @@ class MixamoLeg(MixamoLimb):
         super().createIkCtrls()
         self.foot.createFootIk()
 
-    def createIkCtrlObj(self):
-        ctrlJnt = cmds.joint(
-            name=f"{self.ctrlNameSpace}:ctrl{self.thirdJnt}Ik",
-            p=[0, 0, 0])
-        cubeCtrl = drawCtrlCube(
-            name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}",
-            size=10.0)
-        cmds.makeIdentity(cubeCtrl, apply=True, r=True)
-
-        self.setupAnkleCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)
-        self.ikCtrl = ctrlJnt
-        lockAndHideAttributes(self.ikCtrl, translate=False, others=["radi"])
-
-    def setupAnkleCtrl(self, ctrlJnt: str, jntName: str, ctrlObj: str):
+    def setupEndJntCtrl(self, ctrlJnt: str, jntName: str, ctrlObj: str):
         # take in a single joint and a ctrl object
         # and set up for ankle control
         # so that it rotates around world Y and local X and Z
