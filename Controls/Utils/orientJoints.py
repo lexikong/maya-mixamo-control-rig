@@ -16,10 +16,11 @@ def orientJoints(jntNameSpace: str):
         cmds.setAttr(f"{wristJnt}.jointOrientY", 0.0)
         # make sure there is a positive z value on elboe joint
         elbowJointOrientZ = cmds.getAttr(f"{elbowJnt}.jointOrientZ")
-        if (elbowJointOrientZ < 0):
-            cmds.setAttr(f"{elbowJnt}.jointOrientZ", elbowJointOrientZ * -1)
-        elif (elbowJointOrientZ == 0):
+        if (abs(elbowJointOrientZ) < 0.05):
             cmds.setAttr(f"{elbowJnt}.jointOrientZ", 0.05)
+        elif (elbowJointOrientZ < 0):
+            cmds.setAttr(f"{elbowJnt}.jointOrientZ", elbowJointOrientZ * -1)
+
         cmds.setAttr(f"{elbowJnt}.translateX", 0.0)
         cmds.setAttr(f"{wristJnt}.translateX", 0.0)
         cmds.setAttr(f"{elbowJnt}.translateZ", 0.0)
@@ -31,10 +32,11 @@ def orientJoints(jntNameSpace: str):
         # so that it won't flip on IK
         # TODO: should I do the same for elbow?
         kneeJointOrientX = cmds.getAttr(f"{knee}.jointOrientX")
-        if (kneeJointOrientX > 0):
-            cmds.setAttr(f"{knee}.jointOrientX", kneeJointOrientX * -1)
-        elif (kneeJointOrientX == 0):
+        if (abs(kneeJointOrientX) < 0.05):
             cmds.setAttr(f"{knee}.jointOrientX", -0.05)
+        elif (kneeJointOrientX > 0):
+            cmds.setAttr(f"{knee}.jointOrientX", kneeJointOrientX * -1)
+
         cmds.setAttr(f"{knee}.jointOrientY", 0.0)
         cmds.setAttr(f"{knee}.jointOrientZ", 0.0)
         cmds.setAttr(f"{ankle}.jointOrientY", 0.0)
@@ -56,4 +58,3 @@ def orientJoints(jntNameSpace: str):
     rightBallJnt = f"{jntNameSpace}:Right{BALL}"
     cmds.setAttr(f"{rightBallJnt}.jointOrientY", 0.0)
     cmds.setAttr(f"{rightBallJnt}.jointOrientZ", 0.0)
-
