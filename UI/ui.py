@@ -1,24 +1,110 @@
-import maya.cmds as cmds
+# This file was created with the assistance of ChatGPT
+
+import maya.OpenMayaUI as omui
+
+# PySide compatibility
+try:
+    from PySide2 import QtWidgets, QtCore
+    from shiboken2 import wrapInstance
+except ImportError:
+    from PySide6 import QtWidgets, QtCore
+    from shiboken6 import wrapInstance
+
 from ..Controls.startup import RigBuilder
 
 
-# UI elements id
-NS_FIELD_ID = "nameSpaceField"
-SKELETON_MENU_ID = 'skeletonLodMenu'
-# constants
+WINDOW_TITLE = "MixamoControlRig"
+WINDOW_NAME = "MixamoControlRigWindow"
 TEXT_HEIGHT = 30
-TEXT_FIELD_WIDTH = (120, 100)
+MIN_WIDTH = 350
+SPACING = 8
+TEXT_FIELD_WIDTH = (200, 100)
 
 DEV_MODE = True
 
 
+def getMayaMainWindow():
+    mainWindowPtr = omui.MQtUtil.mainWindow()
+    return wrapInstance(int(mainWindowPtr), QtWidgets.QWidget)
+
+
+class MixamoControlRigUI(QtWidgets.QDialog):
+
+    def __init__(self, parent=getMayaMainWindow()):
+        super().__init__(parent)
+
+        self.setWindowTitle(WINDOW_TITLE)
+        self.setObjectName(WINDOW_NAME)
+        self.setMinimumWidth(MIN_WIDTH)
+
+        self._buildUi()
+        self._connectSignals()
+
+    def _buildUi(self):
+        mainLayout = QtWidgets.QVBoxLayout(self)
+        mainLayout.setSpacing(SPACING)
+
+        # instruction
+        instructionLabel = QtWidgets.QLabel("Select the hip joint to start")
+        instructionLabel.setFixedHeight(TEXT_HEIGHT)
+        instructionLabel.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        mainLayout.addWidget(instructionLabel)
+
+        # namespace field
+        nsLayout = QtWidgets.QHBoxLayout()
+        nsLabel = QtWidgets.QLabel("Control NameSpace")
+        nsLabel.setFixedWidth(TEXT_FIELD_WIDTH[0])
+
+        self.namespaceField = QtWidgets.QLineEdit()
+        self.namespaceField.setPlaceholderText("e.g. ctrl")
+        self.namespaceField.setText("ctrl")
+        self.namespaceField.setFixedWidth(TEXT_FIELD_WIDTH[1])
+
+        nsLayout.addWidget(nsLabel)
+        nsLayout.addWidget(self.namespaceField)
+        nsLayout.addStretch()
+        mainLayout.addLayout(nsLayout)
+
+        # skeleton LOD menu
+        lodLayout = QtWidgets.QHBoxLayout()
+        lodLabel = QtWidgets.QLabel("Skeleton LOD")
+        lodLabel.setFixedWidth(TEXT_FIELD_WIDTH[0])
+
+        self.skeletonMenu = QtWidgets.QComboBox()
+        self.skeletonMenu.addItems([
+            "Standard Skeleton (65)",
+            "3 Chain Finger (49)",
+            "2 Chain Finger (41)",
+            "No Finger (25)",
+        ])
+
+        lodLayout.addWidget(lodLabel)
+        lodLayout.addWidget(self.skeletonMenu)
+        lodLayout.addStretch()
+        mainLayout.addLayout(lodLayout)
+
+        # create button
+        self.createButton = QtWidgets.QPushButton("Create Control Rigs")
+        mainLayout.addWidget(self.createButton)
+
+    def _connectSignals(self):
+        self.createButton.clicked.connect(self.createCtrls)
+
+    def createCtrls(self):
+        ctrlNamespace = self.namespaceField.text()
+        skeletonLod = self.skeletonMenu.currentIndex() + 1
+        # pass the user inputs to RigBuilder
+        rigBuilder = RigBuilder()
+        rigBuilder.start(ctrlNamespace, skeletonLod)
+
+
 def createUI():
-    # DEV ONLY
-    if (DEV_MODE):
+    # DEV ONLY: reload modules
+    if DEV_MODE:
         import sys
         import importlib
 
-        modules_to_reload = [
+        modulesToReload = [
             "mixamoControlRig.Controls.startup",
             "mixamoControlRig.Controls.Rigs",
             "mixamoControlRig.Controls.Rigs.arm",
@@ -43,43 +129,16 @@ def createUI():
             "mixamoControlRig.UI.ui",
         ]
 
-        for m in modules_to_reload:
+        for m in modulesToReload:
             if m in sys.modules:
                 importlib.reload(sys.modules[m])
 
-    # building UI
-    windowName = 'MixamoControlRigWindow'
+    # close existing window
+    for widget in QtWidgets.QApplication.allWidgets():
+        if widget.objectName() == WINDOW_NAME:
+            widget.close()
+            widget.deleteLater()
 
-    if cmds.window(windowName, exists=True):
-        cmds.deleteUI(windowName, window=True)
-
-    cmds.window(windowName, title="MixamoControlRig")
-    cmds.columnLayout(adjustableColumn=True)
-
-    cmds.text(label="Select the hip joint to start", h=TEXT_HEIGHT)
-
-    cmds.textFieldGrp(NS_FIELD_ID,
-                      label='Control NameSpace',
-                      placeholderText='e.g. ctrl',
-                      text='ctrl',
-                      columnWidth2=TEXT_FIELD_WIDTH)
-
-    cmds.optionMenuGrp(SKELETON_MENU_ID,
-                       label='Skeleton LOD',
-                       h=TEXT_HEIGHT)
-    cmds.menuItem(label='Standard Skeleton (65)')
-    cmds.menuItem(label='3 Chain Finger (49)')
-    cmds.menuItem(label='2 Chain Finger (41)')
-    cmds.menuItem(label='No Finger (25)')
-
-    cmds.button(label="Create Control Rigs", command=createCtrls)
-
-    cmds.showWindow(windowName)
-
-
-def createCtrls(*args):
-    ctrlNameSpace = cmds.textFieldGrp(NS_FIELD_ID, query=True, text=True)
-    skeletonLOD = cmds.optionMenuGrp(SKELETON_MENU_ID, query=True, select=True)
-
-    rigBuilder = RigBuilder()
-    rigBuilder.start(ctrlNameSpace, skeletonLOD)
+    ui = MixamoControlRigUI()
+    ui.show()
+    return ui
