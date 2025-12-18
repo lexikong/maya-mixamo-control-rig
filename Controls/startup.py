@@ -32,25 +32,37 @@ class RigBuilder:
         setScriptDir = myScriptDir + 'mixamoControlRig/controls/'
         sys.path.append(setScriptDir)
 
+    def checkNameSpace(self):
+        if cmds.namespace(exists=self.ctrlNameSpace):
+            cmds.warning(f'NameSpace "{self.ctrlNameSpace}" already exists, '
+                          'please delete it or use another namespace.')
+            return False
+        else:
+            return True
+
     def checkSelection(self):
         # select the hip joint
         selected = cmds.ls(selection=True)
         numElements = len(selected)
         if not selected:
-            print("Please select a Hips joint to start with")
-            return
+            cmds.warning("Please select a Hips joint to start with")
+            return False
         elif (numElements > 1):
-            print("Please select only one object")
-            return
+            cmds.warning("Please select only one object")
+            return False
         else:
-            self.process(selected[0])
+            self.userSelected = selected[0]
+            return True
 
-    def process(self, selected: str):
+    def checkUserInput(self):
+        return self.checkNameSpace() and self.checkSelection()
+
+    def process(self):
         # extract the jnt namespace from the selected object
-        if (":" not in selected):
+        if (":" not in self.userSelected):
             jntNameSpace = ""
         else:
-            jntNameSpace = selected.split(":")[0]
+            jntNameSpace = self.userSelected.split(":")[0]
 
         orientJoints.orientJoints(jntNameSpace)
         fingers.createFingerCtrls(jntNameSpace, self.ctrlNameSpace)
@@ -76,6 +88,7 @@ class RigBuilder:
         cmds.select(clear=True)
 
     def cleanup(self):
+        # DEV only
         # remove all controls
         ctrls = cmds.ls(f"{self.ctrlNameSpace}:*")
         if ctrls:
@@ -96,6 +109,6 @@ class RigBuilder:
         UserInput.setCtrlNS(ctrlNameSpace)
         UserInput.setFingers(skeletonIndex)
         self.ctrlNameSpace = UserInput.getCtrlNS()
-        self.cleanup()
 
-        self.checkSelection()
+        if (self.checkUserInput()):
+            self.process()
