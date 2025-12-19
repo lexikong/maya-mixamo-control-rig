@@ -19,16 +19,16 @@ This tool has only been tested on Windows 11 so far, and it may or may not work 
 4. Drag and drop install_mixamoControlRig.py to the viewport.
 
 ## How To Use
-1. Select the hips joint of the character
-    * <img src="images/step1.png" width="200">
-2. Enter the namespace in which the control rigs will be created (or leave it as default "ctrl")
-    * <img src="images/step2.png" width="200">
+1. Select the hips joint of the character  
+   <img src="Images/step1.png" width="200">
+2. Enter the namespace in which the control rigs will be created (or leave it as default "ctrl")  
+   <img src="Images/step2.png" width="200">
 3. Select the proper skeleton LOD from the drop-down menu
     * If the character is a Mixamo pre-defined character, keep it as default(Standard Skeleton)
-    * If you upload your own character to Mixamo Auto Rigger, choose the same option as you rig the character(by default it is Standard Skeleton as well)
-    <img src="images/step3.png" width="200">
-4. Click the **Create Control Rigs** button
-    * <img src="images/step4.png" width="200">
+    * If you upload your own character to Mixamo Auto Rigger, choose the same option as you rig the character(by default it is Standard Skeleton as well)  
+   <img src="Images/step3.png" width="200">
+4. Click the **Create Control Rigs** button  
+   <img src="Images/step4.png" width="200">
 
 ## Known Issues
 1. The character's mesh may cover the control rigs if the character is bulky. A workaround is to switch to wireframe mode(by hitting '4').
