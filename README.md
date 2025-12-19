@@ -13,7 +13,8 @@ Maya 2023 or later.
 This tool has only been tested on Windows 11 so far, and it may or may not work on other operating systems.
 
 ## Installation
-1. Download the latest release.
+1. Download **MixamoControlRig_v1.0.0.zip** from the [latest release](https://github.com/lexikong/maya-mixamo-control-rigs/releases).
+    * Note: If you clone from this git repository, you need to re-organize the folder structure manually, see the comment in [installMixamoControlRig.py](installMixamoControlRig.py)  
 2. Unzip it to a preferred location.
 3. Open Maya.
 4. Drag and drop install_mixamoControlRig.py to the viewport.
