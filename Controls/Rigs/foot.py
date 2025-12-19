@@ -1,7 +1,7 @@
 from maya import cmds
-from ..Utils.helpers import multiJntFkCtrl, createCircleCtrl, lockAndHideAttributes
+from ..Utils.helpers import createCircleCtrl, lockAndHideAttributes
 from ..Utils.constants import YELLOW
-from ..Utils.shapes import drawCtrlBox, drawCtrlCube, drawCtrlCircle
+from ..Utils.shapes import drawCtrlBox, drawCtrlCube
 
 
 class MixamoFoot:

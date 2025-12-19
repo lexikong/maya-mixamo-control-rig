@@ -1,6 +1,6 @@
 from maya import cmds
 from ..Utils.helpers import multiJntFkCtrl, setFkCtrlHierarchy, lockAndHideAttributes
-from ..Utils.constants import HEAD, HEAD_END, NECK, VIOLET, SPINES
+from ..Utils.constants import HEAD, HEAD_END, NECK, VIOLET
 from ..Utils.shapes import drawCtrlBox
 import math
 

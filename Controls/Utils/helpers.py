@@ -58,7 +58,12 @@ def createCrossCtrl(ctrlNameSpace: str,
     return crossCtrl, zeroGrp
 
 
-def multiJntFkCtrl(jnts, jntNameSpace, ctrlNameSpace, radius=25, color=YELLOW, constraint: str = "orient"):
+def multiJntFkCtrl(jnts,
+                   jntNameSpace,
+                   ctrlNameSpace,
+                   radius=25,
+                   color=YELLOW,
+                   constraint: str = "orient"):
     # jnts: a list of joint names without namespace prefix
     # the order is bottom up
     # e.g. ["Spine2", "Spine1", "Spine"]
@@ -68,7 +73,12 @@ def multiJntFkCtrl(jnts, jntNameSpace, ctrlNameSpace, radius=25, color=YELLOW, c
     return topLvlGrp
 
 
-def createFkCtrls(jnts, jntNameSpace, ctrlNameSpace, radius, color, constraint: str = "orient"):
+def createFkCtrls(jnts,
+                  jntNameSpace,
+                  ctrlNameSpace,
+                  radius,
+                  color,
+                  constraint: str = "orient"):
     for jnt in jnts:
         circleCtrl = createCircleCtrl(ctrlNameSpace,
                                       jntNameSpace,

@@ -201,7 +201,6 @@ class MixamoLimb(ABC):
         cmds.connectAttr(f"{blendCtrl}.{blendAttr}", f"{thirdJntConstraint}.{thirdFkAttr}")
 
         # connect to visibility of IK and FK ctrls
-        # TODO: make zero grp names not hardcoded
         fkZeroGrp = f"{self.ctrlNameSpace}:zero{self.firstJnt}Fk"
         ikZeroGrp = f"{self.ctrlNameSpace}:zero{self.thirdJnt}Ik"
         pvZeroGrp = f"{self.ctrlNameSpace}:zero{self.secondJnt}PoleVec"

@@ -14,8 +14,8 @@ def createFingerCtrls(jntNameSpace: str, ctrlNameSpace: str):
         for hand in HANDS:
             # create a group to hold all ctrls
             ctrlGrp = cmds.group(world=True,
-                                empty=True,
-                                name=f"{ctrlNameSpace}:{hand}CtrlGrp")
+                                 empty=True,
+                                 name=f"{ctrlNameSpace}:{hand}CtrlGrp")
             wristJnt = f"{jntNameSpace}:{hand}"
             cmds.matchTransform(ctrlGrp, wristJnt)
 
@@ -28,10 +28,10 @@ def createFingerCtrls(jntNameSpace: str, ctrlNameSpace: str):
                 for i in range(NUM_FINGER_JOINTS-1, 0, -1):
                     jnts.append(f"{hand}{fngr}{str(i)}")
                 topLvlGrp = multiJntFkCtrl(jnts,
-                                        jntNameSpace,
-                                        ctrlNameSpace,
-                                        radius=2.2,
-                                        color=RED)
+                                           jntNameSpace,
+                                           ctrlNameSpace,
+                                           radius=2.2,
+                                           color=RED)
                 cmds.parent(topLvlGrp, ctrlGrp)
 
             # Parent constrain the control group to the wrist joint

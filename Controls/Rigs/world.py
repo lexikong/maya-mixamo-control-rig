@@ -43,7 +43,11 @@ def setScaleCtrl(jntNameSpace: str, worldCtrl: str):
     cmds.scaleConstraint(worldCtrl, hipJnt)
     # add rigScale attribute
     rigScaleAttr = "rigScale"
-    cmds.addAttr(worldCtrl, longName=rigScaleAttr, minValue=0.0, keyable=True, attributeType='float')
+    cmds.addAttr(worldCtrl,
+                 longName=rigScaleAttr,
+                 minValue=0.0,
+                 keyable=True,
+                 attributeType='float')
     cmds.setAttr(f"{worldCtrl}.{rigScaleAttr}", 1)
 
     # connect rigScale to scaleX, Y and Z

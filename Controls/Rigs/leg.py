@@ -56,7 +56,7 @@ class MixamoLeg(MixamoLimb):
         # create ankle FK control
         # using a joint as the controller
         # so that the rotation is around world Y and local X,Z
-        ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{jntName}",p=[0,0,0])
+        ctrlJnt = cmds.joint(name=f"{self.ctrlNameSpace}:ctrl{jntName}", p=[0,0,0])
         ctrlCircle = drawCtrlCircle(f"tmpCtrl{jntName}",
                                     radius=10.0,
                                     normal=FRONT,

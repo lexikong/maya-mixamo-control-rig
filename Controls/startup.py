@@ -25,13 +25,6 @@ class RigBuilder:
     def __init__(self):
         self.ctrlNameSpace = ""
 
-    def importMayaScript(self):
-        # add the script directory to the system path
-        # TODO: make this work when being distributed as a package
-        myScriptDir = cmds.internalVar(userScriptDir=True)
-        setScriptDir = myScriptDir + 'mixamoControlRig/controls/'
-        sys.path.append(setScriptDir)
-
     def checkNameSpace(self):
         if cmds.namespace(exists=self.ctrlNameSpace):
             cmds.warning(f'NameSpace "{self.ctrlNameSpace}" already exists, '
@@ -65,12 +58,20 @@ class RigBuilder:
             jntNameSpace = self.userSelected.split(":")[0]
 
         orientJoints.orientJoints(jntNameSpace)
-        fingers.createFingerCtrls(jntNameSpace, self.ctrlNameSpace)
 
-        leftArm = arm.MixamoArm(jntNameSpace, self.ctrlNameSpace, limbConfig.leftArmParams)
-        leftLeg = leg.MixamoLeg(jntNameSpace, self.ctrlNameSpace, limbConfig.leftLegParams)
-        rightArm = arm.MixamoArm(jntNameSpace, self.ctrlNameSpace, limbConfig.rightArmParams)
-        rightLeg = leg.MixamoLeg(jntNameSpace, self.ctrlNameSpace, limbConfig.rightLegParams)
+        fingers.createFingerCtrls(jntNameSpace, self.ctrlNameSpace)
+        leftArm = arm.MixamoArm(jntNameSpace,
+                                self.ctrlNameSpace,
+                                limbConfig.leftArmParams)
+        leftLeg = leg.MixamoLeg(jntNameSpace,
+                                self.ctrlNameSpace,
+                                limbConfig.leftLegParams)
+        rightArm = arm.MixamoArm(jntNameSpace,
+                                 self.ctrlNameSpace,
+                                 limbConfig.rightArmParams)
+        rightLeg = leg.MixamoLeg(jntNameSpace,
+                                 self.ctrlNameSpace,
+                                 limbConfig.rightLegParams)
 
         leftArm.createCtrls()
         leftLeg.createCtrls()
@@ -80,9 +81,7 @@ class RigBuilder:
         shoulders.createShoulderCtrls(jntNameSpace, self.ctrlNameSpace)
         head.createHeadCtrls(jntNameSpace, self.ctrlNameSpace)
         spine.createSpineCtrls(jntNameSpace, self.ctrlNameSpace)
-
         cog.createCogCtrl(jntNameSpace, self.ctrlNameSpace)
-
         world.createWorldCtrl(jntNameSpace, self.ctrlNameSpace)
 
         cmds.select(clear=True)
@@ -105,7 +104,7 @@ class RigBuilder:
             cmds.delete(node)
 
     def start(self, ctrlNameSpace: str, skeletonIndex: int):
-        # TODO: check-up instead of cleanup
+        # The entry point of the class
         UserInput.setCtrlNS(ctrlNameSpace)
         UserInput.setFingers(skeletonIndex)
         self.ctrlNameSpace = UserInput.getCtrlNS()
