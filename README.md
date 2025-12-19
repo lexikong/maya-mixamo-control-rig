@@ -35,7 +35,7 @@ This tool has only been tested on Windows 11 so far, and it may or may not work 
 1. The character's mesh may cover the control rigs if the character is bulky. A workaround is to switch to wireframe mode(by hitting '4').
 
 ## Issue Reporting
-File a new issue [here](https://github.com/lexikong/Maya-Mixamo-Control-Rigs/issues)
+File a new issue [here](https://github.com/lexikong/maya-mixamo-control-rig/issues)
 
 ## Licensing
 This tool is licensed under MIT License.
