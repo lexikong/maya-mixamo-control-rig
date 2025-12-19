@@ -11,10 +11,10 @@ HOW TO USE:
 
 FOLDER STRUCTURE:
     The installer expects the following layout:
-    /mixamoControlRig_v1/
-        ├── install_mixamoControlRig.py (this file)
-        ├── mixamoRigIcon.png
-        └── mixamoControlRig/
+    /MixamoControlRig_v1.0.0/
+        ├── installMixamoControlRig.py (this file)
+        ├── MixamoRigIcon.png
+        └── MixamoControlRig/
             ├── Controls/
             └── UI/
 
@@ -35,11 +35,11 @@ import traceback
 import stat
 
 
-TOOL_FOLDER_NAME = "mixamoControlRig"
+TOOL_FOLDER_NAME = "MixamoControlRig"
 TOOL_VERSION = "1.0"
 SHELF_TAB = "Custom"
 BUTTON_LABEL = "Rig"
-ICON_FILENAME = "mixamoRigIcon.png"
+ICON_FILENAME = "MixamoRigIcon.png"
 
 
 # Helper Functions
@@ -87,7 +87,7 @@ def createShelfButton(modulesDir, installerDir):
     shelf = ensureShelf(SHELF_TAB)
     removeExistingButton(shelf, BUTTON_LABEL)
 
-    # modulesDir is the path containing the 'mixamoControlRig' folder.
+    # modulesDir is the path containing the 'MixamoControlRig' folder.
     modulesDirFixed = modulesDir.replace("\\", "/")
 
     command = f"""
@@ -176,7 +176,7 @@ def onMayaDroppedPythonFile(*args):
             print(f"Added to sys.path for current session: {modulesDirFixed}")
 
         # Launch UI
-        from mixamoControlRig.UI import ui
+        from MixamoControlRig.UI import ui
         ui.createUI()
 
         # Add shelf button
