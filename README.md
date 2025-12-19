@@ -17,7 +17,7 @@ This tool has only been tested on Windows 11 so far, and it may or may not work 
     * Note: If you clone from this git repository, you need to re-organize the folder structure manually, see the comment section in [installMixamoControlRig.py](installMixamoControlRig.py)  
 2. Unzip it to a preferred location.
 3. Open Maya.
-4. Drag and drop install_mixamoControlRig.py to the viewport.
+4. Drag and drop **installMixamoControlRig.py** to the viewport.
 
 ## How To Use
 1. Select the hips joint of the character  
