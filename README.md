@@ -10,7 +10,9 @@ This tool works for both Mixamo pre-defined characters and custom characters rig
 ## Requirement
 Maya 2023 or later.
 
-This tool has only been tested on Windows 11 so far, and it may or may not work on other operating systems.
+This tool has only been tested on Windows 11 so far. Compatibility with other operating systems is not guaranteed.
+
+If you try it on a different platform, I’d appreciate hearing about your experience. Feel free to open a new issue [here](https://github.com/lexikong/maya-mixamo-control-rig/issues), whether it works or not on your operating system.
 
 ## Installation
 1. Download **[MixamoControlRig_v1.0.0.zip](https://github.com/lexikong/maya-mixamo-control-rig/releases/download/v1.0.0/MixamoControlRig_v1.0.0.zip)**.
@@ -26,7 +28,7 @@ This tool has only been tested on Windows 11 so far, and it may or may not work 
    <img src="Images/step2.png" width="200">
 3. Select the proper skeleton LOD from the drop-down menu
     * If the character is a Mixamo pre-defined character, keep it as default(Standard Skeleton)
-    * If you upload your own character to Mixamo Auto Rigger, choose the same option as you rig the character(by default it is Standard Skeleton as well)  
+    * If you upload your own character to Mixamo Auto Rigger, choose the same option you chose while rigging the character (by default it is Standard Skeleton as well)  
    <img src="Images/step3.png" width="200">
 4. Click the **Create Control Rigs** button  
    <img src="Images/step4.png" width="200">
@@ -35,7 +37,7 @@ This tool has only been tested on Windows 11 so far, and it may or may not work 
 1. The character's mesh may cover the control rigs if the character is bulky. A workaround is to switch to wireframe mode(by hitting '4').
 
 ## Issue Reporting
-File a new issue [here](https://github.com/lexikong/maya-mixamo-control-rig/issues)
+Open a new issue [here](https://github.com/lexikong/maya-mixamo-control-rig/issues)
 
 ## Licensing
 This tool is licensed under MIT License.
