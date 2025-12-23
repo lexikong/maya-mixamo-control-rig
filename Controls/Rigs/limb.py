@@ -169,7 +169,7 @@ class MixamoLimb(ABC):
                                                   size=7.0,
                                                   color=YELLOW)
 
-        # put the blend control around the first joint plus offset
+        # put the blend control around the second joint plus offset
         cmds.matchTransform(blendZeroGrp, sndJntFull, pos=True, rot=False, scl=False)
 
         currentTranslate = cmds.getAttr(f"{blendZeroGrp}.translate")[0]
