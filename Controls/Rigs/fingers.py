@@ -46,7 +46,7 @@ def addFingerCurlCtrl(jntNameSpace, ctrlNameSpace, fngrNames):
             # Create the curl ctrl obj
             curlCtrl, curlZeroGrp = createCrossCtrl(ctrlNameSpace,
                                                     f"{hand}FingerCurlCtrl",
-                                                    size=7.0)
+                                                    size=4.5)
             # put the curl control shape around the wrist plus offset
             wristJnt = f"{jntNameSpace}:{hand}"
             cmds.matchTransform(curlZeroGrp, wristJnt, pos=True, rot=False, scl=False)
