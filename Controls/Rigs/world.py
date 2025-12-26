@@ -24,6 +24,11 @@ def setWorldHierarchy(worldCtrl: str, ctrlNameSpace: str):
     cogZeroGrp = f"{ctrlNameSpace}:zeroCog"
     cmds.parent(cogZeroGrp, worldCtrl)
     for hand in HANDS:
+        # put finger curl ctrl under handIK
+        fngrCurlCtrlGrp = f"{ctrlNameSpace}:zero{hand}FingerCurlCtrl"
+        handIkCtrl = f"{ctrlNameSpace}:ctrl{hand}Ik"
+        if (cmds.objExists(fngrCurlCtrlGrp)):
+            cmds.parent(fngrCurlCtrlGrp, handIkCtrl)
         handIkZeroGrp = f"{ctrlNameSpace}:zero{hand}Ik"
         cmds.parent(handIkZeroGrp, worldCtrl)
     for elbow in ELBOWS:

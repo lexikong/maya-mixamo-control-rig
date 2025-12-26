@@ -23,7 +23,6 @@ class MixamoArm(MixamoLimb):
 
     def setupEndJntCtrl(self, ctrlJnt: str, jntName: str, ctrlObj: str):
         # take in a single joint and a ctrl object
-
         jntNameFull = f"{self.jntNameSpace}:{jntName}"
         cmds.matchTransform(ctrlJnt, jntNameFull)
 
