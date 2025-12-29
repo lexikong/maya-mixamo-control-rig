@@ -15,7 +15,7 @@ This tool has only been tested on Windows 11 so far. Compatibility with other op
 If you try it on a different platform, I’d appreciate hearing about your experience. Feel free to open a new issue [here](https://github.com/lexikong/maya-mixamo-control-rig/issues), whether it works or not on your operating system.
 
 ## Installation
-1. Download **[MixamoControlRig_v1.1.0.zip](https://github.com/lexikong/maya-mixamo-control-rig/releases/download/v1.1.0/MixamoControlRig_v1.1.0.zip)**.
+1. Download **[MixamoControlRig_v1.1.1.zip](https://github.com/lexikong/maya-mixamo-control-rig/releases/download/v1.1.1/MixamoControlRig_v1.1.1.zip)**.
     * Note: If you clone from this git repository, you need to re-organize the folder structure manually, see the comment section in [installMixamoControlRig.py](installMixamoControlRig.py)  
 2. Unzip it to a preferred location.
 3. Open Maya.
