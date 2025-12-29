@@ -59,7 +59,6 @@ class RigBuilder:
 
         orientJoints.orientJoints(jntNameSpace)
 
-        fingers.createFingerCtrls(jntNameSpace, self.ctrlNameSpace)
         leftArm = arm.MixamoArm(jntNameSpace,
                                 self.ctrlNameSpace,
                                 limbConfig.leftArmParams)

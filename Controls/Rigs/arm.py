@@ -2,6 +2,7 @@ from .limb import MixamoLimb
 from ..Utils.limbParams import mixamoArmParams
 from maya import cmds
 from ..Utils.helpers import multiJntFkCtrl
+from .fingers import MixamoFingers
 
 
 class MixamoArm(MixamoLimb):
@@ -10,6 +11,13 @@ class MixamoArm(MixamoLimb):
                  ctrlNameSpace: str,
                  armConfig: mixamoArmParams):
         super().__init__(jntNameSpace, ctrlNameSpace, armConfig)
+        self.fingers = MixamoFingers(jntNameSpace,
+                                     ctrlNameSpace,
+                                     self.thirdJnt)
+
+    def createCtrls(self):
+        self.fingers.createCtrls()
+        super().createCtrls()
 
     def createFkCtrls(self):
         jntsFull = cmds.listRelatives(self._firstJntFkFull, allDescendents=True)

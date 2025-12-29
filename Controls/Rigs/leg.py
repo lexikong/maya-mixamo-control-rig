@@ -49,7 +49,6 @@ class MixamoLeg(MixamoLimb):
             cmds.parent(zeroGrp, parentCtrl)
 
         # create foot FK
-        # TODO: separate it
         self.foot.createFootFk()
 
     def createAnkleFkCtrl(self, jntName: str):
