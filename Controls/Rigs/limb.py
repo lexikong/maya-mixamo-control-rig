@@ -4,7 +4,7 @@ from ..Utils.helpers import (
     createCubeCtrl,
     createCrossCtrl,
     lockAndHideAttributes)
-from ..Utils.constants import YELLOW
+from ..Utils.constants import YELLOW, IK_BOX_SIZE
 from ..Utils.limbParams import mixamoLimbParams
 from ..Utils.shapes import drawCtrlCube
 
@@ -86,7 +86,7 @@ class MixamoLimb(ABC):
             p=[0, 0, 0])
         cubeCtrl = drawCtrlCube(
             name=f"{self.ctrlNameSpace}:cube{self.thirdJnt}",
-            size=15.0)
+            size=IK_BOX_SIZE)
         cmds.makeIdentity(cubeCtrl, apply=True, r=True)
 
         self.setupEndJntCtrl(ctrlJnt, f"{self.thirdJnt}Ik", cubeCtrl)
