@@ -18,7 +18,10 @@ def orientJoints(jntNameSpace: str):
         # and negative on right elbow joint
         elbowJointOrientZ = cmds.getAttr(f"{elbowJnt}.jointOrientZ")
         if (abs(elbowJointOrientZ) < 0.05):
-            cmds.setAttr(f"{elbowJnt}.jointOrientZ", 0.05)
+            if (arm == "LeftArm"):
+                cmds.setAttr(f"{elbowJnt}.jointOrientZ", 0.05)
+            else:
+                cmds.setAttr(f"{elbowJnt}.jointOrientZ", -0.05)
         elif ((arm == "LeftArm" and elbowJointOrientZ < 0) or
               (arm == "RightArm" and elbowJointOrientZ > 0)):
             cmds.setAttr(f"{elbowJnt}.jointOrientZ", elbowJointOrientZ * -1)
