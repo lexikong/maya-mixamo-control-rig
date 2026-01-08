@@ -22,6 +22,7 @@ If you try it on a different platform, I’d appreciate hearing about your exper
 4. Drag and drop **installMixamoControlRig.py** to the viewport.
 
 ## How To Use
+Video version here: [YouTube](https://www.youtube.com/watch?v=zSPepccJQF8)
 1. Select the hips joint of the character  
    <img src="Images/step1.png" width="200">
 2. Enter the namespace in which the control rigs will be created (or leave it as default "ctrl")  
@@ -37,7 +38,7 @@ If you try it on a different platform, I’d appreciate hearing about your exper
 1. The character's mesh may cover the control rigs if the character is bulky. A workaround is to switch to wireframe mode(by hitting '4').
 
 ## Issue Reporting
-For bug reports, troubleshooting support, feature requests, or any other inquiries, please feel free to open a new issue [here](https://github.com/lexikong/maya-mixamo-control-rig/issues)
+For bug reports, troubleshooting support, feature requests, or any other inquiries, please feel free to open a new issue [here](https://github.com/lexikong/maya-mixamo-control-rig/issues), or leave a comment under this [YouTube Video](https://www.youtube.com/watch?v=zSPepccJQF8).
 
 ## Licensing
 This tool is licensed under MIT License.
