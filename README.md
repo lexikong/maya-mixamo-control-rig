@@ -36,6 +36,7 @@ Video version here: [YouTube](https://www.youtube.com/watch?v=zSPepccJQF8)
 
 ## Known Issues
 1. The character's mesh may cover the control rigs if the character is bulky. A workaround is to switch to wireframe mode(by hitting '4').
+2. This tool only works when the scene unit is set to centimeters
 
 ## Issue Reporting
 For bug reports, troubleshooting support, feature requests, or any other inquiries, please feel free to open a new issue [here](https://github.com/lexikong/maya-mixamo-control-rig/issues), or leave a comment under this [YouTube Video](https://www.youtube.com/watch?v=zSPepccJQF8).
